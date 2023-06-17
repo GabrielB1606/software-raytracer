@@ -12,8 +12,11 @@ SDL_WindowFlags window_flags;
 SDL_Window* window;
 SDL_Renderer* renderer;
 
-#define WIDTH 800
-#define HEIGHT 600
+#define RENDER_WIDTH 800
+#define RENDER_HEIGHT 600
+
+#define WIDTH 1280
+#define HEIGHT 720
 
 // Main code
 int main(int, char**){
@@ -24,31 +27,77 @@ int main(int, char**){
 
     RayTracingRenderer rtRenderer(renderer);
 
+    // SDL_Surface* surface = SDL_GetWindowSurface(window);
+    SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormat(0, RENDER_WIDTH, RENDER_HEIGHT, 32, SDL_PIXELFORMAT_ARGB8888);
+
     // Main loop
     while (!done){
-
-        eventHandler(window, renderer);
 
         SDL_SetRenderDrawColor(renderer, (Uint8)(clear_color.x * 255), (Uint8)(clear_color.y * 255), (Uint8)(clear_color.z * 255), (Uint8)(clear_color.w * 255));
         SDL_RenderClear(renderer);
 
-        for (size_t i = 0; i < 50; i++)
-            for (size_t j = 0; j < 50; j++)
-                rtRenderer.putpixel(glm::vec2(i,j), glm::vec3(255, 0, 0));
-        
-        if(saveFrame){
-            frameToBMP();
-            saveFrame = false;
-        }
-        
+        eventHandler(window, renderer);
+
         drawImGUI();
+
+        // Lock the surface to access its pixel data
+        if (SDL_LockSurface(surface) != 0) {
+            // Handle error
+            break;
+        }
+
+        // Access pixel data and update framebuffer
+        Uint32* pixels = (Uint32*)surface->pixels;
+        int pitch = surface->pitch / sizeof(Uint32);
+        for (int y = 0; y < surface->h; ++y) {
+            for (int x = 0; x < surface->w; ++x) {
+                // Write pixel data to framebuffer
+                Uint32 color = 0xff00ffff /* calculate or retrieve pixel color */;
+                pixels[y * pitch + x] = color;
+            }
+        }
+
+        // Unlock the surface to make it visible
+        SDL_UnlockSurface(surface);
+
+        // Convert the SDL surface to an ImGUI texture
+        ImTextureID textureID = (ImTextureID)(intptr_t)SDL_CreateTextureFromSurface(renderer, surface);
+
+        // Display the image using ImGUI
+        ImGui::Begin("Image Window");
+        ImGui::Image(textureID, ImVec2(RENDER_WIDTH, RENDER_HEIGHT));
+        ImGui::End();
+
+
+        // Update the display with the modified framebuffer
+        // SDL_UpdateWindowSurface(window);
         renderImGUI(renderer);
 
         SDL_RenderPresent(renderer);
+
+        // Destroy the SDL texture
+        SDL_DestroyTexture((SDL_Texture*)textureID);
+
+        // rtRenderer.render(WIDTH, HEIGHT);
+
+        // for (size_t i = 0; i < 50; i++)
+        //     for (size_t j = 0; j < 50; j++)
+        //         rtRenderer.putPixel(glm::vec2(i,j), glm::vec3(255, 0, 0));
+        
+        // if(saveFrame){
+        //     frameToBMP();
+        //     saveFrame = false;
+        // }
+        
+        // drawImGUI();
+        // renderImGUI(renderer);
+
+        // SDL_RenderPresent(renderer);
         
     }
 
     cleanImGUI();
+    SDL_FreeSurface(surface);
     SDLClean(window, renderer);
 
     return 0;
@@ -84,7 +133,7 @@ int SDLInit(){
     // Create window with SDL_Renderer graphics context
     window_flags = (SDL_WindowFlags)(SDL_WINDOW_ALLOW_HIGHDPI);
     window = SDL_CreateWindow("Dear ImGui SDL2+SDL_Renderer example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, window_flags);
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (renderer == nullptr)
     {
         SDL_Log("Error creating SDL_Renderer!");

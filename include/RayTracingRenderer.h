@@ -12,8 +12,10 @@ public:
     RayTracingRenderer(SDL_Renderer* renderer);
     virtual ~RayTracingRenderer(){}
 
-    // brush
-    void putpixel(glm::vec2 position, glm::vec3 color);
+    void putPixel(glm::vec2 position, glm::vec3 color);
+    glm::vec3 fragmentFunction(glm::vec2 coord);
+
+    void render(size_t width, size_t height);
 };
 
 
