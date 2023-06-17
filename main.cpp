@@ -140,11 +140,6 @@ void drawImGUI(RayTracingRenderer* rtRenderer){
     ImGui::NewFrame();
     DockSpace();
 
-    // ImDrawList* drawList = ImGui::GetBackgroundDrawList();
-    // for (size_t i = 0; i < 50; i++)
-    //     for (size_t j = 0; j < 50; j++)
-    //         drawList->AddLine(ImVec2(i, j), ImVec2(i, j), IM_COL32(255, 255, 0, 255), 1.0f);
-
     ImGuiIO& io = ImGui::GetIO(); (void)io;
 
     // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
@@ -215,8 +210,7 @@ void eventHandler(SDL_Window* window, SDL_Renderer* renderer){
     }
 }
 
-void DockSpace()
-{
+void DockSpace(){
     static bool opt_fullscreen = true;
     static bool opt_padding = false;
     static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;

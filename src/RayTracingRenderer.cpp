@@ -52,7 +52,7 @@ ImTextureID RayTracingRenderer::render(SDL_Renderer* renderer){
     for (int y = 0; y < surface->h; ++y) {
         for (int x = 0; x < surface->w; ++x) {
             // Write pixel data to framebuffer
-            Uint32 color = 0xff00ffff /* calculate or retrieve pixel color */;
+            Uint32 color = vec3ToARGB(glm::vec3((float)x/width, (float)y/height, 0.f)) /* calculate or retrieve pixel color */;
             pixels[y * pitch + x] = color;
         }
     }
@@ -61,7 +61,6 @@ ImTextureID RayTracingRenderer::render(SDL_Renderer* renderer){
     SDL_UnlockSurface(surface);
 
     if(saveFrame){
-        // SDL_RenderReadPixels(renderer, NULL, SDL_PIXELFORMAT_ARGB8888, surface->pixels, surface->pitch);
         SDL_SaveBMP(surface, "screenshot.bmp");
         saveFrame = false;
     }
@@ -80,4 +79,13 @@ ImTextureID RayTracingRenderer::render(SDL_Renderer* renderer){
 
 void RayTracingRenderer::takeScreenshot(){
     this->saveFrame = true;
+}
+
+uint32_t RayTracingRenderer::vec3ToARGB(const glm::vec3 &color){
+    uint32_t a = 255 & 0xFF;
+    uint32_t r = static_cast<uint32_t>(color.r * 255) & 0xFF;
+    uint32_t g = static_cast<uint32_t>(color.g * 255) & 0xFF;
+    uint32_t b = static_cast<uint32_t>(color.b * 255) & 0xFF;
+
+    return (a << 24) | (r << 16) | (g << 8) | b;
 }

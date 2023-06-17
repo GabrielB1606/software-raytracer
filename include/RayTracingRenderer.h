@@ -25,6 +25,8 @@ public:
 
     void takeScreenshot();
 
+    static uint32_t vec3ToARGB(const glm::vec3& color);
+
 };
 
 
