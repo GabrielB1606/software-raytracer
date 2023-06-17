@@ -19,6 +19,7 @@ void initImGUI(SDL_Window* window, SDL_Renderer* renderer);
 void drawImGUI();
 void renderImGUI(SDL_Renderer* renderer);
 void cleanImGUI();
+void DockSpace();
 
 // SDL functions
 int SDLInit();
