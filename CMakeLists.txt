@@ -49,6 +49,7 @@ add_library(glm INTERFACE)
 target_include_directories(glm INTERFACE ${GLM_PATH})
 
 # Your executable
+include_directories(${CMAKE_SOURCE_DIR}/include)
 add_executable(${PROJECT_NAME} main.cpp)
 
 # Linking
