@@ -51,7 +51,7 @@ glm::vec3 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
     float delta = b*b -4.f*a*c;
 
     if( delta >= 0 )
-        return glm::vec3( coord.x, coord.y, 1.f );
+        return glm::vec3( 0.f, 1.f, 0.f );
     else
         return glm::vec3( 69.f, 69.f, 69.f );
 }
