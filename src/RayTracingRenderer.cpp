@@ -60,6 +60,12 @@ ImTextureID RayTracingRenderer::render(SDL_Renderer* renderer){
     // Unlock the surface to make it visible
     SDL_UnlockSurface(surface);
 
+    if(saveFrame){
+        // SDL_RenderReadPixels(renderer, NULL, SDL_PIXELFORMAT_ARGB8888, surface->pixels, surface->pitch);
+        SDL_SaveBMP(surface, "screenshot.bmp");
+        saveFrame = false;
+    }
+
     this->textureID = (ImTextureID)(intptr_t)SDL_CreateTextureFromSurface(renderer, surface);
 
     return this->textureID;
@@ -70,4 +76,8 @@ ImTextureID RayTracingRenderer::render(SDL_Renderer* renderer){
     //     for (size_t j = 0; j < width; j++)
     //         putPixel(glm::vec2(j, i), fragmentFunction(glm::vec2(j, i)));
 
+}
+
+void RayTracingRenderer::takeScreenshot(){
+    this->saveFrame = true;
 }

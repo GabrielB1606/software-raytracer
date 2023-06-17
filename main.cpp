@@ -34,7 +34,7 @@ int main(int, char**){
 
         eventHandler(window, renderer);
 
-        drawImGUI();
+        drawImGUI(&rtRenderer);
 
         // Convert the SDL surface to an ImGUI texture
         ImTextureID textureID = rtRenderer.render(renderer);
@@ -132,7 +132,7 @@ void initImGUI(SDL_Window* window, SDL_Renderer* renderer){
     ImGui_ImplSDLRenderer2_Init(renderer);
 }
 
-void drawImGUI(){
+void drawImGUI(RayTracingRenderer* rtRenderer){
     // Start the Dear ImGui frame
     ImGui_ImplSDLRenderer2_NewFrame();
     ImGui_ImplSDL2_NewFrame();
@@ -171,7 +171,7 @@ void drawImGUI(){
         ImGui::Text("counter = %d", counter);
 
         if(ImGui::Button("Screenshot"))
-            saveFrame = true;
+            rtRenderer->takeScreenshot();
 
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
         ImGui::End();

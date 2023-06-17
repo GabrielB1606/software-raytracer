@@ -13,7 +13,7 @@ private:
     SDL_Surface *surface;
     size_t width, height;
     ImTextureID textureID;
-
+    bool saveFrame = false;
 public:
     RayTracingRenderer(size_t width, size_t height);
     virtual ~RayTracingRenderer();
@@ -22,6 +22,9 @@ public:
     glm::vec3 fragmentFunction(glm::vec2 coord);
 
     ImTextureID render(SDL_Renderer* renderer);
+
+    void takeScreenshot();
+
 };
 
 

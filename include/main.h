@@ -16,7 +16,7 @@
 
 // ImGUI functions
 void initImGUI(SDL_Window* window, SDL_Renderer* renderer);
-void drawImGUI();
+void drawImGUI(RayTracingRenderer* rtRenderer);
 void renderImGUI(SDL_Renderer* renderer);
 void cleanImGUI();
 void DockSpace();
@@ -24,7 +24,6 @@ void DockSpace();
 // SDL functions
 int SDLInit();
 void SDLClean(SDL_Window* window, SDL_Renderer* renderer);
-void frameToBMP();
 
 // input
 void eventHandler(SDL_Window* window, SDL_Renderer* renderer);
