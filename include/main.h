@@ -21,6 +21,7 @@ void cleanImGUI();
 // SDL functions
 int SDLInit();
 void SDLClean(SDL_Window* window, SDL_Renderer* renderer);
+void frameToBMP();
 
 // input
 void eventHandler(SDL_Window* window, SDL_Renderer* renderer);

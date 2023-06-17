@@ -15,15 +15,6 @@ SDL_Renderer* renderer;
 #define WIDTH 800
 #define HEIGHT 600
 
-void frameToBMP(){
-    
-    SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormat(0, WIDTH, HEIGHT, 32, SDL_PIXELFORMAT_ARGB8888);
-    SDL_RenderReadPixels(renderer, NULL, SDL_PIXELFORMAT_ARGB8888, surface->pixels, surface->pitch);
-    SDL_SaveBMP(surface, "screenshot.bmp");
-    SDL_FreeSurface(surface);
-
-}
-
 // Main code
 int main(int, char**){
     
@@ -52,7 +43,6 @@ int main(int, char**){
         renderImGUI(renderer);
 
         SDL_RenderPresent(renderer);
-
         
     }
 
@@ -60,6 +50,15 @@ int main(int, char**){
     SDLClean(window, renderer);
 
     return 0;
+}
+
+void frameToBMP(){
+    
+    SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormat(0, WIDTH, HEIGHT, 32, SDL_PIXELFORMAT_ARGB8888);
+    SDL_RenderReadPixels(renderer, NULL, SDL_PIXELFORMAT_ARGB8888, surface->pixels, surface->pitch);
+    SDL_SaveBMP(surface, "screenshot.bmp");
+    SDL_FreeSurface(surface);
+
 }
 
 void SDLClean(SDL_Window* window, SDL_Renderer* renderer){
