@@ -22,6 +22,8 @@ int main(int, char**){
         return 1;
     initImGUI(window, renderer);
 
+    RayTracingRenderer rtRenderer(renderer);
+
     // Main loop
     while (!done){
 
@@ -32,7 +34,7 @@ int main(int, char**){
 
         for (size_t i = 0; i < 50; i++)
             for (size_t j = 0; j < 50; j++)
-                putpixel(renderer, glm::vec2(i,j), glm::vec3(255, 0, 0));
+                rtRenderer.putpixel(glm::vec2(i,j), glm::vec3(255, 0, 0));
         
         if(saveFrame){
             frameToBMP();
@@ -93,12 +95,6 @@ int SDLInit(){
     //SDL_Log("Current SDL_Renderer: %s", info.name);
 
     return 0;
-}
-
-void putpixel(SDL_Renderer* renderer, glm::vec2 position, glm::vec3 color){
-    SDL_Rect pixelRect = { (int)position.x, (int)position.y, 1, 1 };
-    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255.f);
-    SDL_RenderFillRect(renderer, &pixelRect);
 }
 
 void cleanImGUI(){
