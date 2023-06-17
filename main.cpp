@@ -5,11 +5,24 @@ bool show_demo_window = true;
 bool show_another_window = false;
 ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 bool done = false;
+bool saveFrame = false;
 
 // SDL things
 SDL_WindowFlags window_flags;
 SDL_Window* window;
 SDL_Renderer* renderer;
+
+#define WIDTH 800
+#define HEIGHT 600
+
+void frameToBMP(){
+    
+    SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormat(0, WIDTH, HEIGHT, 32, SDL_PIXELFORMAT_ARGB8888);
+    SDL_RenderReadPixels(renderer, NULL, SDL_PIXELFORMAT_ARGB8888, surface->pixels, surface->pitch);
+    SDL_SaveBMP(surface, "screenshot.bmp");
+    SDL_FreeSurface(surface);
+
+}
 
 // Main code
 int main(int, char**){
@@ -30,11 +43,16 @@ int main(int, char**){
             for (size_t j = 0; j < 50; j++)
                 putpixel(renderer, glm::vec2(i,j), glm::vec3(255, 0, 0));
         
+        if(saveFrame){
+            frameToBMP();
+            saveFrame = false;
+        }
         
         drawImGUI();
         renderImGUI(renderer);
 
         SDL_RenderPresent(renderer);
+
         
     }
 
@@ -64,7 +82,7 @@ int SDLInit(){
 
     // Create window with SDL_Renderer graphics context
     window_flags = (SDL_WindowFlags)(SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-    window = SDL_CreateWindow("Dear ImGui SDL2+SDL_Renderer example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, window_flags);
+    window = SDL_CreateWindow("Dear ImGui SDL2+SDL_Renderer example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, window_flags);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     if (renderer == nullptr)
     {
@@ -119,9 +137,6 @@ void drawImGUI(){
     //     for (size_t j = 0; j < 50; j++)
     //         drawList->AddLine(ImVec2(i, j), ImVec2(i, j), IM_COL32(255, 255, 0, 255), 1.0f);
 
-    // Enable docking
-    // ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
-
     ImGuiIO& io = ImGui::GetIO(); (void)io;
 
     // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
@@ -147,6 +162,9 @@ void drawImGUI(){
         ImGui::SameLine();
         ImGui::Text("counter = %d", counter);
 
+        if(ImGui::Button("Screenshot"))
+            saveFrame = true;
+
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
         ImGui::End();
     }
@@ -163,17 +181,9 @@ void drawImGUI(){
 }
 
 void renderImGUI(SDL_Renderer* renderer){
-
-    // ImGuiIO& io = ImGui::GetIO(); (void)io;
-
     // Rendering
     ImGui::Render();
-    // SDL_RenderSetScale(renderer, io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
-    // SDL_SetRenderDrawColor(renderer, (Uint8)(clear_color.x * 255), (Uint8)(clear_color.y * 255), (Uint8)(clear_color.z * 255), (Uint8)(clear_color.w * 255));
-    // SDL_RenderClear(renderer);
     ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
-    // SDL_RenderPresent(renderer);
-
 }
 
 void eventHandler(SDL_Window* window, SDL_Renderer* renderer){
