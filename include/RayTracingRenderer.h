@@ -1,21 +1,27 @@
 #ifndef RAYTRACINGRENDERER_H
 #define RAYTRACINGRENDERER_H
 
+#include <iostream>
+
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
 #include "SDL.h"
+#include "imgui.h"
 
 class RayTracingRenderer{
 private:
-    SDL_Renderer* renderer;
+    SDL_Surface *surface;
+    size_t width, height;
+    ImTextureID textureID;
+
 public:
-    RayTracingRenderer(SDL_Renderer* renderer);
-    virtual ~RayTracingRenderer(){}
+    RayTracingRenderer(size_t width, size_t height);
+    virtual ~RayTracingRenderer();
 
     void putPixel(glm::vec2 position, glm::vec3 color);
     glm::vec3 fragmentFunction(glm::vec2 coord);
 
-    void render(size_t width, size_t height);
+    ImTextureID render(SDL_Renderer* renderer);
 };
 
 
