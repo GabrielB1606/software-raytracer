@@ -12,6 +12,9 @@
 #include <stdio.h>
 #include "SDL.h"
 
+#include "glm/vec3.hpp"
+#include "glm/vec2.hpp"
+
 #if !SDL_VERSION_ATLEAST(2,0,17)
 #error This backend requires SDL 2.0.17+ because of SDL_RenderGeometry() function
 #endif
@@ -21,9 +24,9 @@ void drawImGUI();
 void renderImGUI(SDL_Renderer* renderer);
 void cleanImGUI();
 
-void eventHandler(SDL_Window* window);
+void eventHandler(SDL_Window* window, SDL_Renderer* renderer);
 
-void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel);
+void putpixel(SDL_Renderer* renderer, glm::vec2 position, glm::vec3 color);
 
 // Our state
 bool show_demo_window = true;
@@ -46,7 +49,7 @@ int main(int, char**){
 
     // Create window with SDL_Renderer graphics context
     SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-    SDL_Window* window = SDL_CreateWindow("Dear ImGui SDL2+SDL_Renderer example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
+    SDL_Window* window = SDL_CreateWindow("Dear ImGui SDL2+SDL_Renderer example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, window_flags);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     if (renderer == nullptr)
     {
@@ -57,14 +60,26 @@ int main(int, char**){
     //SDL_GetRendererInfo(renderer, &info);
     //SDL_Log("Current SDL_Renderer: %s", info.name);
 
+
     initImGUI(window, renderer);
+    SDL_Surface *surface;
 
     // Main loop
     while (!done){
 
-        eventHandler(window);
+        eventHandler(window, renderer);
+
+        SDL_SetRenderDrawColor(renderer, (Uint8)(clear_color.x * 255), (Uint8)(clear_color.y * 255), (Uint8)(clear_color.z * 255), (Uint8)(clear_color.w * 255));
+        SDL_RenderClear(renderer);
+
+        for (size_t i = 0; i < 50; i++)
+            for (size_t j = 0; j < 50; j++)
+                putpixel(renderer, glm::vec2(i,j), glm::vec3(255, 0, 0));
+        
         drawImGUI();
         renderImGUI(renderer);
+
+        SDL_RenderPresent(renderer);
         
     }
 
@@ -77,9 +92,10 @@ int main(int, char**){
     return 0;
 }
 
-void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel){
-    Uint32 *pixels = (Uint32 *)surface->pixels;
-    pixels[(y * surface->w) + x] = pixel;
+void putpixel(SDL_Renderer* renderer, glm::vec2 position, glm::vec3 color){
+    SDL_Rect pixelRect = { (int)position.x, (int)position.y, 1, 1 };
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255.f);
+    SDL_RenderFillRect(renderer, &pixelRect);
 }
 
 void cleanImGUI(){
@@ -96,6 +112,7 @@ void initImGUI(SDL_Window* window, SDL_Renderer* renderer){
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
@@ -110,6 +127,11 @@ void drawImGUI(){
     ImGui_ImplSDLRenderer2_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
+
+    // ImDrawList* drawList = ImGui::GetBackgroundDrawList();
+    // for (size_t i = 0; i < 50; i++)
+    //     for (size_t j = 0; j < 50; j++)
+    //         drawList->AddLine(ImVec2(i, j), ImVec2(i, j), IM_COL32(255, 255, 0, 255), 1.0f);
 
     // Enable docking
     // ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
@@ -156,19 +178,23 @@ void drawImGUI(){
 
 void renderImGUI(SDL_Renderer* renderer){
 
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    // ImGuiIO& io = ImGui::GetIO(); (void)io;
 
     // Rendering
     ImGui::Render();
-    SDL_RenderSetScale(renderer, io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
-    SDL_SetRenderDrawColor(renderer, (Uint8)(clear_color.x * 255), (Uint8)(clear_color.y * 255), (Uint8)(clear_color.z * 255), (Uint8)(clear_color.w * 255));
-    SDL_RenderClear(renderer);
+    // SDL_RenderSetScale(renderer, io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
+    // SDL_SetRenderDrawColor(renderer, (Uint8)(clear_color.x * 255), (Uint8)(clear_color.y * 255), (Uint8)(clear_color.z * 255), (Uint8)(clear_color.w * 255));
+    // SDL_RenderClear(renderer);
     ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
-    SDL_RenderPresent(renderer);
+    // SDL_RenderPresent(renderer);
 
 }
 
-void eventHandler(SDL_Window* window){
+void eventHandler(SDL_Window* window, SDL_Renderer* renderer){
+
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    SDL_RenderSetScale(renderer, io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
+    
     // Poll and handle events (inputs, window resize, etc.)
     // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
     // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
