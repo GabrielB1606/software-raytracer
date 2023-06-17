@@ -12,8 +12,8 @@ SDL_WindowFlags window_flags;
 SDL_Window* window;
 SDL_Renderer* renderer;
 
-#define RENDER_WIDTH 800
-#define RENDER_HEIGHT 600
+#define RENDER_WIDTH    640
+#define RENDER_HEIGHT   640
 
 #define WIDTH 1280
 #define HEIGHT 720

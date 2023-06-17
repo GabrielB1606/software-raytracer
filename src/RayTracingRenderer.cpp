@@ -29,7 +29,31 @@ void RayTracingRenderer::putPixel(glm::vec2 position, glm::vec3 color){
 }
 
 glm::vec3 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
-    return glm::vec3(69.f);
+
+    // (bx^2 + by^2)t^2 + 2(axbx + ayby)t + (ax^2 + ay^2 - r^2) = 0 
+    // a => ray origin
+    // b => ray direction
+    // r => sphere radius
+    // t => hit point
+
+    glm::vec3 rayDirection = glm::vec3( coord.x, coord.y, -1.f);
+    glm::vec3 rayOrigin = glm::vec3( 0.f, 0.f, 2.f );
+    float r = 0.5f;
+    // rayDirection = glm::normalize(rayDirection);
+
+    // float a = rayDirection.x * rayDirection.x + rayDirection.y * rayDirection.y + rayDirection.z * rayDirection.z;
+    float a = glm::dot(rayDirection, rayDirection);
+    float b = 2.f * glm::dot(rayOrigin, rayDirection);
+    float c = glm::dot(rayOrigin, rayOrigin) - r*r;
+    
+
+    // discriminante
+    float delta = b*b -4.f*a*c;
+
+    if( delta >= 0 )
+        return glm::vec3( coord.x, coord.y, 1.f );
+    else
+        return glm::vec3( 69.f, 69.f, 69.f );
 }
 
 ImTextureID RayTracingRenderer::render(SDL_Renderer* renderer){
@@ -46,13 +70,20 @@ ImTextureID RayTracingRenderer::render(SDL_Renderer* renderer){
         return nullptr;
     }
 
+    glm::vec2 screenCoord;
+    Uint32 color;
+
     // Access pixel data and update framebuffer
     Uint32* pixels = (Uint32*)surface->pixels;
     int pitch = surface->pitch / sizeof(Uint32);
     for (int y = 0; y < surface->h; ++y) {
         for (int x = 0; x < surface->w; ++x) {
             // Write pixel data to framebuffer
-            Uint32 color = vec3ToARGB(glm::vec3((float)x/width, (float)y/height, 0.f)) /* calculate or retrieve pixel color */;
+            screenCoord = glm::vec2((float)x/width,(float)y/height);
+            screenCoord.x = (screenCoord.x*2) -1;
+            screenCoord.y = (screenCoord.y*2) -1;
+
+            color = vec3ToARGB( fragmentFunction( screenCoord ));
             pixels[y * pitch + x] = color;
         }
     }
@@ -68,12 +99,6 @@ ImTextureID RayTracingRenderer::render(SDL_Renderer* renderer){
     this->textureID = (ImTextureID)(intptr_t)SDL_CreateTextureFromSurface(renderer, surface);
 
     return this->textureID;
-
-    // SDL_Surface* surface = SDL_GetWindowSurface(window);
-    // SDL_SetRenderDrawColor(renderer,69, 69, 69, 255.f);
-    // for (size_t i = 0; i < height; i++)
-    //     for (size_t j = 0; j < width; j++)
-    //         putPixel(glm::vec2(j, i), fragmentFunction(glm::vec2(j, i)));
 
 }
 
