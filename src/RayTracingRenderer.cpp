@@ -162,6 +162,11 @@ void RayTracingRenderer::addShape(Shape *shape){
     this->scene.push_back(shape);
 }
 
+void RayTracingRenderer::removeShape(size_t index){
+    delete[] scene[index];
+    scene.erase( scene.begin()+index );
+}
+
 Shape *RayTracingRenderer::getShape(size_t index){
     return this->scene[index];
 }

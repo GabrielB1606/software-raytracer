@@ -27,9 +27,9 @@ int main(int, char**){
 
     RayTracingRenderer rtRenderer(RENDER_WIDTH, RENDER_HEIGHT);
 
-    rtRenderer.addShape( new Sphere(glm::vec3(-0.5f, 0.f, 0.f), 0.25f) );
-    rtRenderer.addShape( new Sphere(glm::vec3(0.5f, 0.f, 0.f), 0.25f) );
-    rtRenderer.addShape( new Cube(glm::vec3(0.f, 0.f, -1.5f), 1.f) );
+    // rtRenderer.addShape( new Sphere(glm::vec3(-0.5f, 0.f, 0.f), 0.25f) );
+    // rtRenderer.addShape( new Sphere(glm::vec3(0.5f, 0.f, 0.f), 0.25f) );
+    // rtRenderer.addShape( new Cube(glm::vec3(0.f, 0.f, -1.5f), 1.f) );
     // rtRenderer.addShape(
     //     new Plane(
     //         glm::vec3(  -10.f,   -10.f,  -10.5f),
@@ -171,8 +171,22 @@ void drawImGUI(RayTracingRenderer* rtRenderer){
 
         ImGui::Separator();
 
+        ImGui::InputInt("Bounces", (int *)rtRenderer->getBouncesRef());
+
+        ImGui::Separator();
+
         Camera* cam = rtRenderer->getCamRef();
         ImGui::DragFloat3("Camera Position", glm::value_ptr(cam->position), 0.1f);
+
+        ImGui::Separator();
+
+        if(ImGui::Button("Add Sphere"))
+            rtRenderer->addShape(new Sphere(glm::vec3(0.f, 0.f, 0.f), 0.25f));
+        
+        ImGui::SameLine();
+
+        if(ImGui::Button("Add Cube"))
+            rtRenderer->addShape(new Cube(glm::vec3(0.f, 0.f, 0.f), 0.25f));
 
         ImGui::Separator();
 
@@ -200,6 +214,9 @@ void drawImGUI(RayTracingRenderer* rtRenderer){
                 if( ImGui::DragFloat("Scale", &s, 0.1f) )
                     cube->setScale(s);
             }
+
+            if( ImGui::Button("Remove") )
+                rtRenderer->removeShape(i);
 
             ImGui::Separator();
 

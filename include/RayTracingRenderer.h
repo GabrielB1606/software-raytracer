@@ -54,6 +54,7 @@ public:
     void takeScreenshot();
 
     void addShape(Shape* shape);
+    void removeShape(size_t index);
     Shape* getShape(size_t index);
     size_t getSceneSize();
 
@@ -65,6 +66,8 @@ public:
 
     glm::vec3 getClearColor();
     void setClearColor(glm::vec3 color);
+
+    size_t* getBouncesRef(){ return &this->bounces; }
 
     static uint32_t vec3ToARGB(const glm::vec3& color);
 

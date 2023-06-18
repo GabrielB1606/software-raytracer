@@ -9,7 +9,12 @@ protected:
     glm::vec3 position;
     glm::vec3 rotation;
     float scale;
+
+    // material
     glm::vec3 albedo;
+    float specular_component;
+    float roughness;
+    float metalic;
 
 public:
     // Should return the T parameter for the closest hit
