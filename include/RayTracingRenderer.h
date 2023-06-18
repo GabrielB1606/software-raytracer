@@ -8,6 +8,7 @@
 #include "glm/glm.hpp"
 #include "SDL.h"
 #include "imgui.h"
+#include <cmath>
 
 class RayTracingRenderer{
 private:
