@@ -156,20 +156,39 @@ void drawImGUI(RayTracingRenderer* rtRenderer){
         ImGui::Begin("Software RayTracer");                        
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
 
-        Shape* selectedShape = rtRenderer->getShape(0);
-        glm::vec3 shapeColor = selectedShape->getAlbedo();
-        if(ImGui::ColorEdit3("Albedo", glm::value_ptr(shapeColor) )) // Edit 3 floats representing a color
-            selectedShape->setAlbedo(shapeColor);
+        ImGui::Separator();
 
-        glm::vec3 shapePosition = selectedShape->getPosition();
-        if(ImGui::DragFloat3("Position", glm::value_ptr(shapePosition), 0.1f))
-            selectedShape->setPosition(shapePosition);
+        Camera* cam = rtRenderer->getCamRef();
+        ImGui::DragFloat3("Camera Position", glm::value_ptr(cam->position), 0.1f);
 
-        if(Sphere *sphere = dynamic_cast<Sphere *>(selectedShape)){
-            float radius = sphere->getRadius();
-            if( ImGui::DragFloat("Radius", &radius, 0.1f) )
-                sphere->setRadius(radius);
+        ImGui::Separator();
+
+        for (size_t i = 0; i < rtRenderer->getSceneSize(); i++){
+
+            ImGui::PushID(i);
+
+            Shape* selectedShape = rtRenderer->getShape(i);
+            glm::vec3 shapeColor = selectedShape->getAlbedo();
+            if(ImGui::ColorEdit3("Albedo", glm::value_ptr(shapeColor) )) // Edit 3 floats representing a color
+                selectedShape->setAlbedo(shapeColor);
+
+            glm::vec3 shapePosition = selectedShape->getPosition();
+            if(ImGui::DragFloat3("Position", glm::value_ptr(shapePosition), 0.1f))
+                selectedShape->setPosition(shapePosition);
+
+            if(Sphere *sphere = dynamic_cast<Sphere *>(selectedShape)){
+                float radius = sphere->getRadius();
+                if( ImGui::DragFloat("Radius", &radius, 0.1f) )
+                    sphere->setRadius(radius);
+            }
+
+            ImGui::Separator();
+
+            ImGui::PopID();
+
         }
+        
+
 
         ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
         ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state

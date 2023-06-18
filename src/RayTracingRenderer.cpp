@@ -128,6 +128,14 @@ Shape *RayTracingRenderer::getShape(size_t index){
     return this->scene[index];
 }
 
+size_t RayTracingRenderer::getSceneSize(){
+    return this->scene.size();
+}
+
+Camera *RayTracingRenderer::getCamRef(){
+    return &this->cam;
+}
+
 uint32_t RayTracingRenderer::vec3ToARGB(const glm::vec3 &color){
     uint32_t a = 255 & 0xFF;
     uint32_t r = static_cast<uint32_t>(color.r * 255) & 0xFF;
