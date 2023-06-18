@@ -110,6 +110,10 @@ void RayTracingRenderer::addShape(Shape *shape){
     this->scene.push_back(shape);
 }
 
+Shape *RayTracingRenderer::getShape(size_t index){
+    return this->scene[index];
+}
+
 uint32_t RayTracingRenderer::vec3ToARGB(const glm::vec3 &color){
     uint32_t a = 255 & 0xFF;
     uint32_t r = static_cast<uint32_t>(color.r * 255) & 0xFF;

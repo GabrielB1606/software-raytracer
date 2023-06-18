@@ -20,6 +20,9 @@ public:
 
     glm::vec3 getPosition(){ return this->position; }
     glm::vec3 getAlbedo(){ return this->albedo; }
+
+    void setAlbedo(glm::vec3 albedo){ this->albedo = albedo; }
+    void setPosition(glm::vec3 position){ this->position = position; }
 };
 
 #endif

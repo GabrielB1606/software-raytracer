@@ -36,6 +36,7 @@ public:
     void takeScreenshot();
 
     void addShape(Shape* shape);
+    Shape* getShape(size_t index);
 
     static uint32_t vec3ToARGB(const glm::vec3& color);
 

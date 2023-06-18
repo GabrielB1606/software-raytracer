@@ -37,3 +37,11 @@ float Sphere::hit(Ray r){
     return -1.f;
 
 }
+
+float Sphere::getRadius(){
+    return radius;
+}
+
+void Sphere::setRadius(float r){
+    this->radius = r;
+}

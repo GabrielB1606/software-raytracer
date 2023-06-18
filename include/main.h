@@ -5,8 +5,8 @@
 #include <stdio.h>
 #include "SDL.h"
 
-#include "glm/vec3.hpp"
-#include "glm/vec2.hpp"
+#include "glm/glm.hpp"
+#include "glm/gtc/type_ptr.hpp"
 
 #include "RayTracingRenderer.h"
 

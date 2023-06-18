@@ -12,6 +12,9 @@ public:
 
     Ray reflect(Ray r) override {return Ray();};
     float hit(Ray r) override;
+
+    float getRadius();
+    void setRadius(float r);
 };
 
 #endif
