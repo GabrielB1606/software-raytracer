@@ -9,6 +9,7 @@
 #include "SDL.h"
 #include "imgui.h"
 #include <cmath>
+#include "Sphere.h"
 
 class RayTracingRenderer{
 private:

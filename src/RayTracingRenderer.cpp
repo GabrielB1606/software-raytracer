@@ -30,44 +30,25 @@ void RayTracingRenderer::putPixel(glm::vec2 position, glm::vec3 color){
 
 glm::vec3 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
 
-    // (bx^2 + by^2)t^2 + 2(axbx + ayby)t + (ax^2 + ay^2 - r^2) = 0 
-    // a => ray origin
-    // b => ray direction
-    // r => sphere radius
-    // t => hit point
-
     glm::vec3 lightDir = glm::normalize( glm::vec3(-1.f, -1.f, -1.f));
 
-    glm::vec3 rayDirection = glm::vec3( coord.x, coord.y, -1.f);
-    glm::vec3 rayOrigin = glm::vec3( 0.f, 0.f, 2.f );
+    Ray ray;
+    ray.direction = glm::vec3( coord.x, coord.y, -1.f);
+    ray.origin = glm::vec3( 0.f, 0.f, 1.f );
 
-    float r = 0.5f;
-    glm::vec3 sphereOrigin = glm::vec3(0.f);
-
-    // rayDirection = glm::normalize(rayDirection);
-
-    // float a = rayDirection.x * rayDirection.x + rayDirection.y * rayDirection.y + rayDirection.z * rayDirection.z;
-    float a = glm::dot(rayDirection, rayDirection);
-    float b = 2.f * glm::dot(rayOrigin, rayDirection);
-    float c = glm::dot(rayOrigin, rayOrigin) - r*r;
+    Sphere s(glm::vec3(0.f), 0.5f);
     
+    float t0 = s.hit(ray);
 
-    // discriminante
-    float delta = b*b -4.f*a*c;
+    if(t0 >= 0){
 
-    if(delta >= 0){
-
-        float t0 = (-b-sqrtf(delta))/(2.f*a);
-        float t1 = (-b+sqrtf(delta))/(2.f*a); 
-
-        glm::vec3 hitPosition = rayOrigin + rayDirection*t0;
-        glm::vec3 normal = glm::normalize( hitPosition - sphereOrigin );
+        glm::vec3 hitPosition = ray.origin + ray.direction*t0;
+        glm::vec3 normal = glm::normalize( hitPosition - s.getPosition() );
 
         float diffuse = __max( 0.25f, glm::dot(normal, -lightDir) );
 
-        // return glm::vec3( 0.f, t0/2.f, 0.f );
-        glm::vec3 normal_ = glm::vec3( normal * 0.5f + 0.5f );
-        return glm::vec3( diffuse* normal_ );
+        glm::vec3 normal_color = glm::vec3( normal * 0.5f + 0.5f );
+        return glm::vec3( diffuse* normal_color );
     }else
         return glm::vec3( 69.f, 69.f, 69.f );
 }

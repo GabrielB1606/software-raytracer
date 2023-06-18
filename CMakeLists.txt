@@ -50,7 +50,7 @@ target_include_directories(glm INTERFACE ${GLM_PATH})
 
 # Your executable
 include_directories(${CMAKE_SOURCE_DIR}/include)
-add_executable(${PROJECT_NAME} main.cpp src/RayTracingRenderer.cpp)
+add_executable(${PROJECT_NAME} main.cpp src/RayTracingRenderer.cpp src/Sphere.cpp)
 
 # Linking
 target_link_libraries(${PROJECT_NAME} SDL2 imgui glm)
