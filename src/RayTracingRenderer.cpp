@@ -40,20 +40,34 @@ glm::vec3 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
     glm::vec3 lightDir = glm::normalize( glm::vec3(-1.f, -1.f, -1.f));
 
     Ray ray =  this->cam.getRay(coord);
-    ray.origin -= scene[0]->getPosition();
-    
-    float t0 = scene[0]->hit(ray);
 
-    if(t0 >= 0){
+    Shape* closestShape = nullptr;
+    float closestHit = FLT_MAX;
+    float t;
+    for(Shape* shape:this->scene){
+        
+        ray.origin = cam.position - shape->getPosition();
+        t = shape->hit(ray);
 
-        glm::vec3 hitPosition = ray.at(t0);
-        glm::vec3 normal = glm::normalize( hitPosition - scene[0]->getPosition() );
+        if(t>=0.f && t<closestHit){
+            closestShape = shape;
+            closestHit = t;
+        }
 
-        float diffuse = __max( 0.f, glm::dot(normal, -lightDir) );
+    }
 
-        return glm::vec3( diffuse*scene[0]->getAlbedo() );
-    }else
+    if(closestShape == nullptr){
         return glm::vec3( 69.f, 69.f, 69.f );
+    }
+
+    ray.origin = cam.position - closestShape->getPosition();
+    glm::vec3 hitPosition = ray.at(closestHit);
+    glm::vec3 normal = glm::normalize( hitPosition - closestShape->getPosition() );
+
+    float diffuse = __max( 0.f, glm::dot(normal, -lightDir) );
+
+    return glm::vec3( diffuse*closestShape->getAlbedo() );
+    
 }
 
 ImTextureID RayTracingRenderer::render(SDL_Renderer* renderer){
