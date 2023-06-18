@@ -27,11 +27,21 @@ private:
     glm::vec3 clearColor = glm::vec3(69.f);
 
 public:
+
+    struct TracingInfo{
+        glm::vec3 hitPosition;
+        Shape* hittedShape;
+        float hitDistance;
+    };
+
+
     RayTracingRenderer(size_t width, size_t height);
     virtual ~RayTracingRenderer();
 
     void putPixel(glm::vec2 position, glm::vec3 color);
     glm::vec3 fragmentFunction(glm::vec2 coord);
+
+    TracingInfo traceRay(Ray r);
 
     ImTextureID render(SDL_Renderer* renderer);
 

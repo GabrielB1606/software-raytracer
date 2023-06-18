@@ -41,13 +41,31 @@ glm::vec3 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
 
     Ray ray =  this->cam.getRay(coord);
 
+    TracingInfo info = traceRay(this->cam.getRay(coord));
+
+    if( info.hittedShape == nullptr )
+        return this->clearColor;
+
+    glm::vec3 normal = info.hittedShape->normalAt(info.hitPosition);
+
+    float diffuse = __max( 0.f, glm::dot(normal, -lightDir) );
+
+    return glm::vec3( diffuse*info.hittedShape->getAlbedo() );
+    
+}
+
+RayTracingRenderer::TracingInfo RayTracingRenderer::traceRay(Ray r){
+
+    TracingInfo info;
+
+    glm::vec3 originalPos = r.origin;
     Shape* closestShape = nullptr;
     float closestHit = FLT_MAX;
     float t;
     for(Shape* shape:this->scene){
         
-        ray.origin = cam.position - shape->getPosition();
-        t = shape->hit(ray);
+        r.origin = originalPos - shape->getPosition();
+        t = shape->hit(r);
 
         if(t>=0.f && t<closestHit){
             closestShape = shape;
@@ -56,18 +74,16 @@ glm::vec3 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
 
     }
 
-    if(closestShape == nullptr){
-        return this->clearColor;
+    if(closestShape == nullptr)
+        info.hittedShape = nullptr;
+    else{
+        r.origin = originalPos;
+        info.hitDistance = closestHit;
+        info.hittedShape = closestShape;
+        info.hitPosition = r.at(closestHit);
     }
 
-    ray.origin = cam.position - closestShape->getPosition();
-    glm::vec3 hitPosition = ray.at(closestHit);
-    glm::vec3 normal = closestShape->normalAt(hitPosition);
-
-    float diffuse = __max( 0.f, glm::dot(normal, -lightDir) );
-
-    return glm::vec3( diffuse*closestShape->getAlbedo() );
-    
+    return info;
 }
 
 ImTextureID RayTracingRenderer::render(SDL_Renderer* renderer){
