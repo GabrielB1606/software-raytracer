@@ -24,6 +24,8 @@ private:
     std::vector<Shape*> scene;
     Camera cam;
 
+    glm::vec3 clearColor = glm::vec3(69.f);
+
 public:
     RayTracingRenderer(size_t width, size_t height);
     virtual ~RayTracingRenderer();
@@ -40,6 +42,9 @@ public:
     size_t getSceneSize();
 
     Camera* getCamRef();
+
+    glm::vec3 getClearColor();
+    void setClearColor(glm::vec3 color);
 
     static uint32_t vec3ToARGB(const glm::vec3& color);
 

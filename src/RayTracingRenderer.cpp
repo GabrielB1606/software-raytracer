@@ -57,7 +57,7 @@ glm::vec3 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
     }
 
     if(closestShape == nullptr){
-        return glm::vec3( 69.f, 69.f, 69.f );
+        return this->clearColor;
     }
 
     ray.origin = cam.position - closestShape->getPosition();
@@ -134,6 +134,14 @@ size_t RayTracingRenderer::getSceneSize(){
 
 Camera *RayTracingRenderer::getCamRef(){
     return &this->cam;
+}
+
+glm::vec3 RayTracingRenderer::getClearColor(){
+    return this->clearColor;
+}
+
+void RayTracingRenderer::setClearColor(glm::vec3 color){
+    this->clearColor = color;
 }
 
 uint32_t RayTracingRenderer::vec3ToARGB(const glm::vec3 &color){

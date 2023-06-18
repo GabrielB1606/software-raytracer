@@ -187,7 +187,10 @@ void drawImGUI(RayTracingRenderer* rtRenderer){
             ImGui::PopID();
 
         }
-        
+
+        glm::vec3 clearColor = rtRenderer->getClearColor();        
+        if(ImGui::ColorEdit3("clear color", glm::value_ptr(clearColor))) // Edit 3 floats representing a color
+            rtRenderer->setClearColor(clearColor);
 
 
         ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
@@ -195,7 +198,6 @@ void drawImGUI(RayTracingRenderer* rtRenderer){
         ImGui::Checkbox("Another Window", &show_another_window);
 
         ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-        ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
 
         if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
             counter++;
