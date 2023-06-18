@@ -12,6 +12,7 @@ public:
 
     Ray reflect(Ray r) override {return Ray();};
     float hit(Ray r) override;
+    glm::vec3 normalAt(glm::vec3 p) override;
 
     float getRadius();
     void setRadius(float r);

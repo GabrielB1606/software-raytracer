@@ -62,7 +62,7 @@ glm::vec3 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
 
     ray.origin = cam.position - closestShape->getPosition();
     glm::vec3 hitPosition = ray.at(closestHit);
-    glm::vec3 normal = glm::normalize( hitPosition - closestShape->getPosition() );
+    glm::vec3 normal = closestShape->normalAt(hitPosition);
 
     float diffuse = __max( 0.f, glm::dot(normal, -lightDir) );
 

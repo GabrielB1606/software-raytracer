@@ -38,6 +38,10 @@ float Sphere::hit(Ray r){
 
 }
 
+glm::vec3 Sphere::normalAt(glm::vec3 p){
+    return glm::normalize( p - this->position );
+}
+
 float Sphere::getRadius(){
     return radius;
 }

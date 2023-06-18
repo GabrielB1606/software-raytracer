@@ -18,6 +18,9 @@ public:
     // Should return the ray reflected on the object
     virtual Ray reflect(Ray r) = 0;   
 
+    // Should retur the normal vector at certain point
+    virtual glm::vec3 normalAt(glm::vec3 p) = 0;
+
     glm::vec3 getPosition(){ return this->position; }
     glm::vec3 getAlbedo(){ return this->albedo; }
 
