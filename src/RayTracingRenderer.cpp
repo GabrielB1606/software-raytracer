@@ -41,16 +41,25 @@ glm::vec3 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
 
     Ray ray =  this->cam.getRay(coord);
 
-    TracingInfo info = traceRay(this->cam.getRay(coord));
+    glm::vec3 fragColor = glm::vec3(0.f);
 
-    if( info.hittedShape == nullptr )
-        return this->clearColor;
+    bool everHitted = false;
 
-    glm::vec3 normal = info.hittedShape->normalAt(info.hitPosition);
+    for (size_t i = 0; i < bounces; i++){
+        TracingInfo info = traceRay(ray);
+        
+        if( info.hittedShape == nullptr )
+            break;
 
-    float diffuse = __max( 0.f, glm::dot(normal, -lightDir) );
+        everHitted = true;
 
-    return glm::vec3( diffuse*info.hittedShape->getAlbedo() );
+        glm::vec3 normal = info.hittedShape->normalAt(info.hitPosition);
+        float diffuse = __max( 0.f, glm::dot(normal, -lightDir) );
+        fragColor += glm::vec3( diffuse*info.hittedShape->getAlbedo() );
+
+    } 
+    
+    return everHitted? fragColor:this->clearColor;
     
 }
 

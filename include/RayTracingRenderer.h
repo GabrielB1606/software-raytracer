@@ -26,6 +26,8 @@ private:
 
     glm::vec3 clearColor = glm::vec3(69.f);
 
+    size_t bounces = 1;
+
 public:
 
     struct TracingInfo{
