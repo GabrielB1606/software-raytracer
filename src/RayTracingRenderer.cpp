@@ -50,8 +50,10 @@ glm::vec3 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
     for (size_t i = 0; i < bounces; i++){
         TracingInfo info = traceRay(ray);
         
-        if( info.hittedShape == nullptr )
+        if( info.hittedShape == nullptr ){
+            fragColor +=  0.05f*clearColor;
             break;
+        }
 
         everHitted = true;
 

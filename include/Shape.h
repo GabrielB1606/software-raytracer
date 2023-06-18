@@ -23,9 +23,12 @@ public:
 
     glm::vec3 getPosition(){ return this->position; }
     glm::vec3 getAlbedo(){ return this->albedo; }
+    float getScale(){ return this->scale; }
 
     void setAlbedo(glm::vec3 albedo){ this->albedo = albedo; }
     void setPosition(glm::vec3 position){ this->position = position; }
+    void setScale(float s){ this->scale = s; }
+
 };
 
 #endif

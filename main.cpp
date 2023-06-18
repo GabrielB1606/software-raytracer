@@ -27,9 +27,17 @@ int main(int, char**){
 
     RayTracingRenderer rtRenderer(RENDER_WIDTH, RENDER_HEIGHT);
 
-    rtRenderer.addShape( new Sphere(glm::vec3(-0.5f, 0.f, 0.f), 0.5f) );
-    rtRenderer.addShape( new Sphere(glm::vec3(0.5f, 0.f, 0.f), 0.5f) );
-    rtRenderer.addShape( new Cube(glm::vec3(0.f, 0.f, 0.f), 20.f) );
+    rtRenderer.addShape( new Sphere(glm::vec3(-0.5f, 0.f, 0.f), 0.25f) );
+    rtRenderer.addShape( new Sphere(glm::vec3(0.5f, 0.f, 0.f), 0.25f) );
+    rtRenderer.addShape( new Cube(glm::vec3(0.f, 0.f, -1.5f), 1.f) );
+    // rtRenderer.addShape(
+    //     new Plane(
+    //         glm::vec3(  -10.f,   -10.f,  -10.5f),
+    //         glm::vec3(  -10.f,    10.f,  -10.5f),
+    //         glm::vec3(   10.f,    10.f,  -10.5f),
+    //         glm::vec3(   10.f,   -10.f,  -10.5f)
+    //     )
+    // );
 
     rtRenderer.addLight( new DirectionalLight(-1.f, -1.f, -1.f) );
     rtRenderer.addLight( new DirectionalLight(1.f, 1.f, 1.f) );
@@ -185,6 +193,12 @@ void drawImGUI(RayTracingRenderer* rtRenderer){
                 float radius = sphere->getRadius();
                 if( ImGui::DragFloat("Radius", &radius, 0.1f) )
                     sphere->setRadius(radius);
+            }
+
+            if(Cube *cube = dynamic_cast<Cube *>(selectedShape)){
+                float s = cube->getScale();
+                if( ImGui::DragFloat("Scale", &s, 0.1f) )
+                    cube->setScale(s);
             }
 
             ImGui::Separator();
