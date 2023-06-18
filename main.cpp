@@ -26,8 +26,12 @@ int main(int, char**){
     initImGUI(window, renderer);
 
     RayTracingRenderer rtRenderer(RENDER_WIDTH, RENDER_HEIGHT);
-    rtRenderer.addShape( new Sphere(glm::vec3(-0.5f, 0.f, 0.f), 0.5f) );
-    rtRenderer.addShape( new Sphere(glm::vec3(0.5f, 0.f, 0.f), 0.5f) );
+
+    rtRenderer.addShape( new Sphere(glm::vec3(0.f, 0.f, 0.f), 0.5f) );
+    // rtRenderer.addShape( new Sphere(glm::vec3(0.5f, 0.f, 0.f), 0.5f) );
+
+    rtRenderer.addLight( new DirectionalLight(-1.f, -1.f, -1.f) );
+    rtRenderer.addLight( new DirectionalLight(1.f, 1.f, 1.f) );
 
     // Main loop
     while (!done){

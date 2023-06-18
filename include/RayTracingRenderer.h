@@ -13,6 +13,7 @@
 #include "Camera.h"
 #include "Shape.h"
 #include "Sphere.h"
+#include "DirectionalLight.h"
 
 class RayTracingRenderer{
 private:
@@ -22,11 +23,13 @@ private:
     bool saveFrame = false;
 
     std::vector<Shape*> scene;
+    std::vector<DirectionalLight*> lights;
     Camera cam;
 
     glm::vec3 clearColor = glm::vec3(69.f);
+    float ambientIntensity = 0.1f;
 
-    size_t bounces = 2;
+    size_t bounces = 1;
 
 public:
 
@@ -52,6 +55,10 @@ public:
     void addShape(Shape* shape);
     Shape* getShape(size_t index);
     size_t getSceneSize();
+
+    void addLight(DirectionalLight* light);
+    DirectionalLight* getLight(size_t index);
+    size_t getLightsSize();
 
     Camera* getCamRef();
 

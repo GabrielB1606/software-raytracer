@@ -20,6 +20,9 @@ RayTracingRenderer::~RayTracingRenderer(){
 
     for( Shape* s : scene )
         delete[] s;
+    
+    for( DirectionalLight* l:lights )
+        delete[] l;
 }
 
 void RayTracingRenderer::putPixel(glm::vec2 position, glm::vec3 color){
@@ -37,7 +40,7 @@ void RayTracingRenderer::putPixel(glm::vec2 position, glm::vec3 color){
 
 glm::vec3 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
 
-    glm::vec3 lightDir = glm::normalize( glm::vec3(-1.f, -1.f, -1.f));
+    // glm::vec3 lightDir = glm::normalize( glm::vec3(-1.f, -1.f, -1.f));
 
     Ray ray =  this->cam.getRay(coord);
 
@@ -55,8 +58,12 @@ glm::vec3 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
         everHitted = true;
 
         glm::vec3 normal = info.hittedShape->normalAt(info.hitPosition);
-        float diffuse = __max( 0.f, glm::dot(normal, -lightDir) );
-        fragColor += multiplier * glm::vec3( diffuse*info.hittedShape->getAlbedo() );
+
+        float diffuse = 0.f;
+        for(DirectionalLight* l:lights)
+            diffuse += __max(0.f, glm::dot(normal, -l->direction));
+
+        fragColor +=  diffuse*info.hittedShape->getAlbedo() ;
 
         multiplier *= 0.5f;
 
@@ -163,6 +170,18 @@ size_t RayTracingRenderer::getSceneSize(){
     return this->scene.size();
 }
 
+void RayTracingRenderer::addLight(DirectionalLight *light){
+    lights.push_back(light);
+}
+
+DirectionalLight *RayTracingRenderer::getLight(size_t index){
+    return lights[index];
+}
+
+size_t RayTracingRenderer::getLightsSize(){
+    return lights.size();
+}
+
 Camera *RayTracingRenderer::getCamRef(){
     return &this->cam;
 }
@@ -177,9 +196,9 @@ void RayTracingRenderer::setClearColor(glm::vec3 color){
 
 uint32_t RayTracingRenderer::vec3ToARGB(const glm::vec3 &color){
     uint32_t a = 255 & 0xFF;
-    uint32_t r = static_cast<uint32_t>(color.r * 255) & 0xFF;
-    uint32_t g = static_cast<uint32_t>(color.g * 255) & 0xFF;
-    uint32_t b = static_cast<uint32_t>(color.b * 255) & 0xFF;
+    uint32_t r = static_cast<uint32_t>(__max(color.r, 0.f) * 255) & 0xFF;
+    uint32_t g = static_cast<uint32_t>(__max(color.g, 0.f) * 255) & 0xFF;
+    uint32_t b = static_cast<uint32_t>(__max(color.b, 0.f) * 255) & 0xFF;
 
     return (a << 24) | (r << 16) | (g << 8) | b;
 }
