@@ -59,6 +59,7 @@ public:
     size_t getSceneSize();
 
     void addLight(DirectionalLight* light);
+    void removeLight(size_t index);
     DirectionalLight* getLight(size_t index);
     size_t getLightsSize();
 

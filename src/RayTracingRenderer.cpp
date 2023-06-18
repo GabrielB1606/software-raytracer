@@ -179,6 +179,11 @@ void RayTracingRenderer::addLight(DirectionalLight *light){
     lights.push_back(light);
 }
 
+void RayTracingRenderer::removeLight(size_t index){
+    delete[] lights[index];
+    lights.erase(lights.begin()+index);
+}
+
 DirectionalLight *RayTracingRenderer::getLight(size_t index){
     return lights[index];
 }

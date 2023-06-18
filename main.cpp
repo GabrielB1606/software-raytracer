@@ -180,6 +180,16 @@ void drawImGUI(RayTracingRenderer* rtRenderer){
 
         ImGui::Separator();
 
+        glm::vec3 clearColor = rtRenderer->getClearColor();
+        if(ImGui::ColorEdit3("clear color", glm::value_ptr(clearColor))) // Edit 3 floats representing a color
+            rtRenderer->setClearColor(clearColor);
+        
+        if(ImGui::Button("Screenshot"))
+            rtRenderer->takeScreenshot();
+
+        ImGui::End();
+        ImGui::Begin("Objects"); 
+
         if(ImGui::Button("Add Sphere"))
             rtRenderer->addShape(new Sphere(glm::vec3(0.f, 0.f, 0.f), 0.25f));
         
@@ -224,24 +234,25 @@ void drawImGUI(RayTracingRenderer* rtRenderer){
 
         }
 
-        glm::vec3 clearColor = rtRenderer->getClearColor();        
-        if(ImGui::ColorEdit3("clear color", glm::value_ptr(clearColor))) // Edit 3 floats representing a color
-            rtRenderer->setClearColor(clearColor);
+        ImGui::End();
+        ImGui::Begin("Lights"); 
 
+        for (size_t i = 0; i < rtRenderer->getLightsSize(); i++){
 
-        ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-        ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-        ImGui::Checkbox("Another Window", &show_another_window);
+            ImGui::PushID(i);
 
-        ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+            DirectionalLight* light = rtRenderer->getLight(i);
+            if(ImGui::DragFloat3("Direction Light", glm::value_ptr(light->direction), 0.1f))
+                light->direction = glm::normalize( light->direction );
 
-        if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-            counter++;
-        ImGui::SameLine();
-        ImGui::Text("counter = %d", counter);
+            if( ImGui::Button("Remove") )
+                rtRenderer->removeLight(i);
 
-        if(ImGui::Button("Screenshot"))
-            rtRenderer->takeScreenshot();
+            ImGui::Separator();
+
+            ImGui::PopID();
+
+        }
 
         ImGui::End();
     }
