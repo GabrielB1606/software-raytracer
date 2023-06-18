@@ -10,6 +10,9 @@
 
 #include "RayTracingRenderer.h"
 
+#include "Sphere.h"
+#include "Cube.h"
+
 #if !SDL_VERSION_ATLEAST(2,0,17)
 #error This backend requires SDL 2.0.17+ because of SDL_RenderGeometry() function
 #endif

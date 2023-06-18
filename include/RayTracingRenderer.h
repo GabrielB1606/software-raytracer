@@ -13,6 +13,7 @@
 #include "Camera.h"
 #include "Shape.h"
 #include "Sphere.h"
+#include "Cube.h"
 #include "DirectionalLight.h"
 
 class RayTracingRenderer{
