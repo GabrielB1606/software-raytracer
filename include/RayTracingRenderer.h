@@ -26,7 +26,7 @@ private:
 
     glm::vec3 clearColor = glm::vec3(69.f);
 
-    size_t bounces = 1;
+    size_t bounces = 2;
 
 public:
 
