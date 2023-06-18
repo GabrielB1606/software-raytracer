@@ -5,6 +5,10 @@ RayTracingRenderer::RayTracingRenderer(size_t width, size_t height){
     this->height = height;
     this->surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 32, SDL_PIXELFORMAT_ARGB8888);
     this->textureID = nullptr;
+
+    this->cam.position = glm::vec3(0.f, 0.f, 1.f);
+    this->cam.z_direction = -1.f;
+
 }
 
 RayTracingRenderer::~RayTracingRenderer(){
@@ -13,6 +17,9 @@ RayTracingRenderer::~RayTracingRenderer(){
         SDL_DestroyTexture((SDL_Texture*)textureID);
         this->textureID = nullptr;
     }
+
+    for( Shape* s : scene )
+        delete[] s;
 }
 
 void RayTracingRenderer::putPixel(glm::vec2 position, glm::vec3 color){
@@ -32,23 +39,19 @@ glm::vec3 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
 
     glm::vec3 lightDir = glm::normalize( glm::vec3(-1.f, -1.f, -1.f));
 
-    Ray ray;
-    ray.direction = glm::vec3( coord.x, coord.y, -1.f);
-    ray.origin = glm::vec3( 0.f, 0.f, 1.f );
-
-    Sphere s(glm::vec3(0.f), 0.5f);
+    Ray ray =  this->cam.getRay(coord);
+    ray.origin -= scene[0]->getPosition();
     
-    float t0 = s.hit(ray);
+    float t0 = scene[0]->hit(ray);
 
     if(t0 >= 0){
 
-        glm::vec3 hitPosition = ray.origin + ray.direction*t0;
-        glm::vec3 normal = glm::normalize( hitPosition - s.getPosition() );
+        glm::vec3 hitPosition = ray.at(t0);
+        glm::vec3 normal = glm::normalize( hitPosition - scene[0]->getPosition() );
 
-        float diffuse = __max( 0.25f, glm::dot(normal, -lightDir) );
+        float diffuse = __max( 0.f, glm::dot(normal, -lightDir) );
 
-        glm::vec3 normal_color = glm::vec3( normal * 0.5f + 0.5f );
-        return glm::vec3( diffuse* normal_color );
+        return glm::vec3( diffuse*scene[0]->getAlbedo() );
     }else
         return glm::vec3( 69.f, 69.f, 69.f );
 }
@@ -101,6 +104,10 @@ ImTextureID RayTracingRenderer::render(SDL_Renderer* renderer){
 
 void RayTracingRenderer::takeScreenshot(){
     this->saveFrame = true;
+}
+
+void RayTracingRenderer::addShape(Shape *shape){
+    this->scene.push_back(shape);
 }
 
 uint32_t RayTracingRenderer::vec3ToARGB(const glm::vec3 &color){

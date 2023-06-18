@@ -3,6 +3,7 @@
 Sphere::Sphere(glm::vec3 origin, float radius){
     this->position = origin;
     this->radius = radius;
+    this->albedo = glm::vec3(0.f, 1.f, 0.f);
 }
 
 float Sphere::hit(Ray r){
@@ -31,7 +32,8 @@ float Sphere::hit(Ray r){
         else if( t1>=0.f )
             return t1;
 
-    }else
-        return -1.f;
+    }
+    
+    return -1.f;
 
 }

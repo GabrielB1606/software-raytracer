@@ -2,13 +2,16 @@
 #define RAYTRACINGRENDERER_H
 
 #include <iostream>
+#include <vector>
+#include <cmath>
 
-#include "glm/vec2.hpp"
-#include "glm/vec3.hpp"
 #include "glm/glm.hpp"
+#include "glm/gtc/type_ptr.hpp"
 #include "SDL.h"
 #include "imgui.h"
-#include <cmath>
+
+#include "Camera.h"
+#include "Shape.h"
 #include "Sphere.h"
 
 class RayTracingRenderer{
@@ -17,6 +20,10 @@ private:
     size_t width, height;
     ImTextureID textureID;
     bool saveFrame = false;
+
+    std::vector<Shape*> scene;
+    Camera cam;
+
 public:
     RayTracingRenderer(size_t width, size_t height);
     virtual ~RayTracingRenderer();
@@ -27,6 +34,8 @@ public:
     ImTextureID render(SDL_Renderer* renderer);
 
     void takeScreenshot();
+
+    void addShape(Shape* shape);
 
     static uint32_t vec3ToARGB(const glm::vec3& color);
 

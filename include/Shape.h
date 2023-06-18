@@ -9,7 +9,7 @@ protected:
     glm::vec3 position;
     glm::vec3 rotation;
     float scale;
-    glm::vec3 color;
+    glm::vec3 albedo;
 
 public:
     // Should return the T parameter for the closest hit
@@ -19,6 +19,7 @@ public:
     virtual Ray reflect(Ray r) = 0;   
 
     glm::vec3 getPosition(){ return this->position; }
+    glm::vec3 getAlbedo(){ return this->albedo; }
 };
 
 #endif
