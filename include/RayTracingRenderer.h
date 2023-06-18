@@ -29,7 +29,7 @@ private:
     glm::vec3 clearColor = glm::vec3(69.f);
     float ambientIntensity = 0.1f;
 
-    size_t bounces = 1;
+    size_t bounces = 2;
 
 public:
 
