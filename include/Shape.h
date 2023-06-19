@@ -14,9 +14,10 @@ protected:
     glm::vec3 albedo;
     float specularExponent;
     float roughness = 0.f;
-    float metalic;
+    float smoothness = 1.f;
     float shininess = 32.f;
     float eta = 1.f;
+    float fresnel = 0.5f;
 
     bool refractive = false;
 
@@ -37,6 +38,7 @@ public:
     float getRoughness(){ return this->roughness; }
     bool isRefractive(){ return this->refractive; }
     float getETA(){ return this->eta; }
+    float getFresnel(){ return this->fresnel; }
 
     void setAlbedo(glm::vec3 albedo){ this->albedo = albedo; }
     void setPosition(glm::vec3 position){ this->position = position; }

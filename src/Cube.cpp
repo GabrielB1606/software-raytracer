@@ -33,18 +33,30 @@ float Cube::hit(Ray r){
 
 glm::vec3 Cube::normalAt(glm::vec3 p){
     
-    glm::vec3 n = glm::vec3(p.x - position.x, p.y - position.y, p.z - position.z);
-    glm::vec3 nAbs = glm::abs(n);
+    // glm::vec3 n = glm::vec3(p.x - position.x, p.y - position.y, p.z - position.z);
+    // glm::vec3 nAbs = glm::abs(n);
 
-    float maxVal = __max(__max(nAbs.x, nAbs.y), nAbs.z);
+    // float maxVal = __max(__max(nAbs.x, nAbs.y), nAbs.z);
 
-    // Check which face of the cube the point lies on based on the largest absolute difference
-    if (maxVal == nAbs.x) {
-        return { n.x>0?1.f:-1.f, 0.f, 0.f };
-    } else if (maxVal == nAbs.y) {
-        return { 0.f, n.y>0?1.f:-1.f, 0.f };
-    } 
+    // // Check which face of the cube the point lies on based on the largest absolute difference
+    // if (maxVal == nAbs.x) {
+    //     return { n.x>0?1.f:-1.f, 0.f, 0.f };
+    // } else if (maxVal == nAbs.y) {
+    //     return { 0.f, n.y>0?1.f:-1.f, 0.f };
+    // } 
     
-    return { 0.f, 0.f, n.z>0?1.f:-1.f };
+    // return { 0.f, 0.f, n.z>0?1.f:-1.f };
+
+    glm::vec3 normal(0.0f);
+    float epsilon = 0.0001f;
+
+    if (std::abs(p.x - (position.x - scale / 2)) < epsilon) normal = glm::vec3(-1, 0, 0);
+    else if (std::abs(p.x - (position.x + scale / 2)) < epsilon) normal = glm::vec3(1, 0, 0);
+    else if (std::abs(p.y - (position.y - scale / 2)) < epsilon) normal = glm::vec3(0, -1, 0);
+    else if (std::abs(p.y - (position.y + scale / 2)) < epsilon) normal = glm::vec3(0, 1, 0);
+    else if (std::abs(p.z - (position.z - scale / 2)) < epsilon) normal = glm::vec3(0, 0, -1);
+    else if (std::abs(p.z - (position.z + scale / 2)) < epsilon) normal = glm::vec3(0, 0, 1);
+
+    return normal;
 
 }

@@ -95,6 +95,7 @@ glm::vec3 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
                     break;
                 
                 case COOK_TORRANCE:
+                    fragColor += shadowComponent*multiplier*l->cook_torrance(info.hittedShape, normal, ray.direction);
                     break;
 
                 default:

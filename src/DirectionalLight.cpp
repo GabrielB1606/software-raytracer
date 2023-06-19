@@ -53,7 +53,37 @@ glm::vec3 DirectionalLight::oren_nayar(Shape *shape, glm::vec3 normal, glm::vec3
 
 glm::vec3 DirectionalLight::cook_torrance(Shape *shape, glm::vec3 normal, glm::vec3 viewDirection){
 
+    glm::vec3 lightDirection = glm::normalize(direction);
+    viewDirection = -glm::normalize(viewDirection);
 
+    float brdf = 0.f;
+    glm::vec3 halfVector = glm::normalize(lightDirection + viewDirection);
+    float NdotL = std::max(glm::dot(normal, lightDirection), 0.0f);
+    float NdotH = std::max(glm::dot(normal, halfVector), 0.0f);
+    float NdotV = std::max(glm::dot(normal, viewDirection), 0.0f);
+    float VdotH = std::max(glm::dot(viewDirection, halfVector), 0.0f);
 
-    return glm::vec3();
+    // fresnel
+    float Kr = glm::pow((1.f - 2.f) / (1.f + 2.f), 2.f);
+    float F = Kr + (1.0 - Kr) * pow((1.0 - NdotL), 5.0);
+
+    // normal
+    float NH2 = glm::pow(NdotH, 2.f);
+    float roughness2 = glm::pow(glm::clamp( shape->getRoughness(), 0.01f, 0.99f), 2.0f);
+    float denom = NH2 * roughness2 + (1.0 - NH2);
+    float D = roughness2 / (M_PI * pow(denom, 2.0));
+    
+    // geometry
+    float g1 = (NdotL * 2.0) / (NdotL + std::sqrt(roughness2 + (1.0 - roughness2) * glm::pow(NdotL, 2.0)));
+    float g2 = (NdotV * 2.0) / (NdotV + std::sqrt(roughness2 + (1.0 - roughness2) * glm::pow(NdotV, 2.0)));
+    float G = g1 * g2;
+
+    brdf = (F*G*D)/((M_PI * NdotV));
+    glm::vec3 ct = this->specularStrength * ( brdf* this->color );
+    glm::vec3 Kd = glm::max(( glm::vec3(1.0) - ct),  glm::vec3(0.f));
+
+    glm::vec3 final = ((Kd * shape->getAlbedo()) + ct);
+
+    return final;
+
 }
