@@ -5,18 +5,16 @@
 
 class Plane: public Shape{
 private:
-    glm::vec3 a, b, c, d;
-    glm::vec3 normal;
+    glm::vec3 point; // a point on the plane
+    glm::vec3 normal; // the normal to the plane
 public:
-    Plane(glm::vec3 pa, glm::vec3 pb, glm::vec3 pc, glm::vec3 pd);
+    Plane(glm::vec3 point, glm::vec3 normal);
 
     virtual ~Plane(){};
 
     Ray reflect(Ray r) override {return Ray();};
     float hit(Ray r) override;
     glm::vec3 normalAt(glm::vec3 p) override;
-
-    bool isInside(glm::vec3 pt);
 
 };
 
