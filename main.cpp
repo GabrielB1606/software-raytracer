@@ -34,22 +34,36 @@ int main(int, char**){
     // rtRenderer.addShape( new Sphere(glm::vec3(0.5f, 0.f, 0.f), 0.25f) );
     // rtRenderer.addShape( new Cube(glm::vec3(0.f, 0.f, -1.5f), 1.f) );
     rtRenderer.addShape(
-        new Plane( glm::vec3( 0.f, 0.f, 0.f), glm::vec3( 0.f, -1.f, 0.f) )
+        new Plane( glm::vec3( 0.f, 1.f, 0.f), glm::vec3( 0.f, -1.f, 0.f) )
     );
     rtRenderer.getShape(0)->setAlbedo( glm::vec3(0.25f, 0.7f, 0.25f) );
 
     rtRenderer.addShape(
         new Plane( glm::vec3( 0.f, 0.f, -2.5f), glm::vec3( 0.f, 0.f, 1.f) )
     );
+    rtRenderer.getShape(1)->setRoughness( 1.f );
 
     rtRenderer.addShape(
         new Plane( glm::vec3( -1.f, 0.f, 0.f), glm::vec3( 1.f, 0.f, 0.f) )
     );
     rtRenderer.getShape(2)->setAlbedo( glm::vec3(0.25f, 0.25f, 0.7f) );
+    rtRenderer.getShape(2)->setRoughness( 1.f );
 
-    // rtRenderer.addShape(
-    //     new Sphere( glm::vec3(0.f, -0.5f, 0.f ), 0.1f )
-    // );
+    rtRenderer.addShape(
+        new Sphere( glm::vec3(0.f, 0.8f, -3.2f ), 1.4f )
+    );
+    rtRenderer.getShape(3)->setAlbedo( glm::vec3(1.f, 0.25f, 0.25f) );
+
+    rtRenderer.addShape(
+        new Sphere( glm::vec3(1.4f, -0.8f, -2.5f ), 0.5f )
+    );
+    rtRenderer.getShape(4)->setAlbedo( glm::vec3(1.f, 1.f, 0.1f) );
+
+    rtRenderer.addShape(
+        new Sphere( glm::vec3(0.f, 1.8f, -1.5f ), 0.25f )
+    );
+    rtRenderer.getShape(5)->setAlbedo( glm::vec3(1.f, 0.f, 1.f) );
+    rtRenderer.getShape(5)->setRoughness( 1.f );
 
     // rtRenderer.addLight( new DirectionalLight(-1.f, -1.f, -1.f) );
     rtRenderer.addLight( new DirectionalLight(1.f, -2.f, 1.f) );
