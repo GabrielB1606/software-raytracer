@@ -230,6 +230,10 @@ void drawImGUI(RayTracingRenderer* rtRenderer){
             if( ImGui::DragFloat("Roughness", &roughness, 0.025f, 0.f, 1.f) )
                 selectedShape->setRoughness(roughness);
 
+            float fresnel = selectedShape->getFresnel();
+            if( ImGui::DragFloat("Fresnel", &fresnel, 0.025f, 0.f) )
+                selectedShape->setFresnel(fresnel);
+
             glm::vec3 shapeColor = selectedShape->getAlbedo();
             if(ImGui::ColorEdit3("Albedo", glm::value_ptr(shapeColor) )) // Edit 3 floats representing a color
                 selectedShape->setAlbedo(shapeColor);
@@ -282,6 +286,9 @@ void drawImGUI(RayTracingRenderer* rtRenderer){
             DirectionalLight* light = rtRenderer->getLight(i);
             if(ImGui::DragFloat3("Direction Light", glm::value_ptr(light->direction), 0.1f))
                 light->direction = glm::normalize( light->direction );
+
+            ImGui::DragFloat("Specular Strength", &light->specularStrength, 0.025f, 0.f);
+            ImGui::DragFloat("Intensity", &light->intensity, 0.025f, 0.f);
 
             const char* elem_name = (light->model >= 0 && light->model < LIGHT_MODEL_COUNT) ? light_model_names[light->model] : "Unknown";
             ImGui::SliderInt("Lighting Model", (int*)&light->model, 0, LIGHT_MODEL_COUNT - 1, elem_name);

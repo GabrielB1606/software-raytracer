@@ -106,7 +106,7 @@ glm::vec3 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
 
         }else{}
 
-        multiplier *= 0.5f;
+        multiplier *= (1.f-info.hittedShape->getRoughness()) * 0.5f;
 
         ray.origin = info.hitPosition + normal*0.0001f;
         if( info.hittedShape->isRefractive() ){

@@ -46,6 +46,7 @@ public:
     void setRoughness(float r){ this->roughness = r; }
     void setRefractive(bool r){ this->refractive = r; }
     void setETA(float eta){ this->eta = eta; }
+    void setFresnel(float f){ this->fresnel = f; }
 
 };
 

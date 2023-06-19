@@ -64,10 +64,11 @@ glm::vec3 DirectionalLight::cook_torrance(Shape *shape, glm::vec3 normal, glm::v
     float VdotH = std::max(glm::dot(viewDirection, halfVector), 0.0f);
 
     // fresnel
-    float Kr = glm::pow((1.f - 2.f) / (1.f + 2.f), 2.f);
+    // float Kr = glm::pow((1.f - 2.f) / (1.f + 2.f), 2.f);
+    float Kr = shape->getFresnel();
     float F = Kr + (1.0 - Kr) * pow((1.0 - NdotL), 5.0);
 
-    // normal
+    // Distribución Normal Trowbridge-Reitz = m^2 / (1 - m^2) * cos^2(alpha) - 1
     float NH2 = glm::pow(NdotH, 2.f);
     float roughness2 = glm::pow(glm::clamp( shape->getRoughness(), 0.01f, 0.99f), 2.0f);
     float denom = NH2 * roughness2 + (1.0 - NH2);
@@ -80,9 +81,11 @@ glm::vec3 DirectionalLight::cook_torrance(Shape *shape, glm::vec3 normal, glm::v
 
     brdf = (F*G*D)/((M_PI * NdotV));
     glm::vec3 ct = this->specularStrength * ( brdf* this->color );
-    glm::vec3 Kd = glm::max(( glm::vec3(1.0) - ct),  glm::vec3(0.f));
+    
+    glm::vec3 lambertian = (1.f - shape->getRoughness()) * (this->color * NdotL);
 
-    glm::vec3 final = ((Kd * shape->getAlbedo()) + ct);
+    glm::vec3 final = shape->getAlbedo() * (ct + lambertian);
+    final = glm::pow(final, glm::vec3(1.f / 2.2f));
 
     return final;
 
