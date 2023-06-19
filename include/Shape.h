@@ -12,9 +12,10 @@ protected:
 
     // material
     glm::vec3 albedo;
-    float specular_component;
+    float specularExponent;
     float roughness;
     float metalic;
+    float shininess = 32.f;
 
 public:
     // Should return the T parameter for the closest hit
@@ -29,6 +30,7 @@ public:
     glm::vec3 getPosition(){ return this->position; }
     glm::vec3 getAlbedo(){ return this->albedo; }
     float getScale(){ return this->scale; }
+    float getShininess(){ return this->shininess; }
 
     void setAlbedo(glm::vec3 albedo){ this->albedo = albedo; }
     void setPosition(glm::vec3 position){ this->position = position; }

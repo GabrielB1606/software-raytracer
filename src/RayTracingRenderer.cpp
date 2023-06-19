@@ -60,11 +60,17 @@ glm::vec3 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
         glm::vec3 normal = info.hittedShape->normalAt(info.hitPosition);
 
         float diffuse = 0.f;
-        for(DirectionalLight* l:lights)
-            diffuse += __max(0.f, glm::dot(normal, -l->direction));
+        for(DirectionalLight* l:lights){
 
-        fragColor +=  multiplier* diffuse*info.hittedShape->getAlbedo() ;
+            if( l->model == PHONG ){
+                fragColor += l->phong(info.hittedShape, normal, ray.direction);
+            }
 
+            // diffuse += __max(0.f, glm::dot(normal, -l->direction));
+        }
+
+        // fragColor +=  multiplier* diffuse*info.hittedShape->getAlbedo() ;
+        fragColor *= multiplier;
         multiplier *= 0.5f;
 
         ray.origin = info.hitPosition + normal*0.0001f;
