@@ -132,24 +132,29 @@ glm::vec4 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
 
 RayTracingRenderer::TracingInfo RayTracingRenderer::traceRay(Ray r){
 
+    // variables para almacenar el objeto final
     TracingInfo info;
-
     glm::vec3 originalPos = r.origin;
     Shape* closestShape = nullptr;
     float closestHit = FLT_MAX;
     float t;
+    
+    // variables para almacenar el objeto final
     for(Shape* shape:this->scene){
         
         r.origin = originalPos - shape->getPosition();
+        // verificar si el rayo intersecta el objeto
         t = shape->hit(r);
-
+        // verificar si se encuentra antes o después
         if(t>=0.f && t<closestHit){
+            // guardar nueva “mejor intersección”
             closestShape = shape;
             closestHit = t;
         }
 
     }
 
+    // retornar el objeto con el cuál se intersectó
     if(closestShape == nullptr)
         info.hittedShape = nullptr;
     else{

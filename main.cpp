@@ -30,9 +30,7 @@ int main(int, char**){
 
     RayTracingRenderer rtRenderer(RENDER_WIDTH, RENDER_HEIGHT);
 
-    // rtRenderer.addShape( new Sphere(glm::vec3(-0.5f, 0.f, 0.f), 0.25f) );
-    // rtRenderer.addShape( new Sphere(glm::vec3(0.5f, 0.f, 0.f), 0.25f) );
-    // rtRenderer.addShape( new Cube(glm::vec3(0.f, 0.f, -1.5f), 1.f) );
+    // inicializar escena
     rtRenderer.addShape(
         new Plane( glm::vec3( 0.f, 1.f, 0.f), glm::vec3( 0.f, -1.f, 0.f) )
     );
