@@ -207,7 +207,7 @@ void drawImGUI(RayTracingRenderer* rtRenderer){
             Shape* selectedShape = rtRenderer->getShape(i);
 
             float roughness = selectedShape->getRoughness();
-            if( ImGui::DragFloat("Roughness", &roughness, 0.05f, 0.f, 1.f) )
+            if( ImGui::DragFloat("Roughness", &roughness, 0.025f, 0.f, 1.f) )
                 selectedShape->setRoughness(roughness);
 
             glm::vec3 shapeColor = selectedShape->getAlbedo();

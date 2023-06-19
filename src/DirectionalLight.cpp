@@ -19,8 +19,6 @@ glm::vec3 DirectionalLight::oren_nayar(Shape *shape, glm::vec3 normal, glm::vec3
 
     glm::vec3 ambientComponent = ambient * color;
 
-    // https://garykeen27.wixsite.com/portfolio/oren-nayar-shading
-
     viewDirection = -glm::normalize(viewDirection);
     glm::vec3 lightDirection = glm::normalize(direction);
 
@@ -40,21 +38,15 @@ glm::vec3 DirectionalLight::oren_nayar(Shape *shape, glm::vec3 normal, glm::vec3
 
     float alpha = std::max(angleVN, angleLN);
     float beta =  std::min(angleVN, angleLN);
-    // float gamma = std::cos(angleVN - angleLN);
-
-    // float roughness2 = shape->getRoughness() * shape->getRoughness();
 
     float roughness = shape->getRoughness();
 
     float A = 1.0 - 0.5 * (roughness / (roughness + 0.33));
     float B = 0.45 * (roughness / (roughness + 0.09));
-    // float C = std::sin(alpha) * std::tan(beta);
 
     glm::vec3 diffuseComponent = color * ( glm::clamp(ndotl, 0.f, 1.f) * (A + B * std::sin(alpha) * std::tan(beta) ));
 
     glm::vec3 finalColor = (ambientComponent + diffuseComponent) * shape->getAlbedo();
-
-    // finalColor = glm::pow(finalColor, glm::vec3(1.f/2.2f));
 
     return finalColor;
 }
