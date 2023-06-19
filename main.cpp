@@ -237,6 +237,8 @@ void drawImGUI(RayTracingRenderer* rtRenderer){
         ImGui::End();
         ImGui::Begin("Lights"); 
 
+        const char* light_model_names[LIGHT_MODEL_COUNT] = { "Phong", "Oren-Nayar", "Cook-Torrance" };
+        
         for (size_t i = 0; i < rtRenderer->getLightsSize(); i++){
 
             ImGui::PushID(i);
@@ -244,6 +246,10 @@ void drawImGUI(RayTracingRenderer* rtRenderer){
             DirectionalLight* light = rtRenderer->getLight(i);
             if(ImGui::DragFloat3("Direction Light", glm::value_ptr(light->direction), 0.1f))
                 light->direction = glm::normalize( light->direction );
+
+            const char* elem_name = (light->model >= 0 && light->model < LIGHT_MODEL_COUNT) ? light_model_names[light->model] : "Unknown";
+            ImGui::SliderInt("Lighting Model", (int*)&light->model, 0, LIGHT_MODEL_COUNT - 1, elem_name);
+            
 
             if( ImGui::Button("Remove") )
                 rtRenderer->removeLight(i);

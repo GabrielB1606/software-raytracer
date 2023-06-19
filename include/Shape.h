@@ -13,7 +13,7 @@ protected:
     // material
     glm::vec3 albedo;
     float specularExponent;
-    float roughness;
+    float roughness = 0.f;
     float metalic;
     float shininess = 32.f;
 
@@ -31,6 +31,7 @@ public:
     glm::vec3 getAlbedo(){ return this->albedo; }
     float getScale(){ return this->scale; }
     float getShininess(){ return this->shininess; }
+    float getRoughness(){ return this->roughness; }
 
     void setAlbedo(glm::vec3 albedo){ this->albedo = albedo; }
     void setPosition(glm::vec3 position){ this->position = position; }

@@ -1,13 +1,17 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 
+#include <algorithm>
+#include <cmath>
+
 #include "glm/glm.hpp"
 #include "Shape.h"
 
 enum LIGHT_MODEL {
     PHONG = 0,
     OREN_NAYAR,
-    COOK_TORRANCE
+    COOK_TORRANCE,
+    LIGHT_MODEL_COUNT
 };
 
 struct DirectionalLight{
@@ -26,6 +30,7 @@ struct DirectionalLight{
     }
 
     glm::vec3 phong( Shape* shape, glm::vec3 normal, glm::vec3 viewDirection );
+    glm::vec3 oren_nayar( Shape* shape, glm::vec3 normal, glm::vec3 viewDirection );
 
 };
 

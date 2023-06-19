@@ -62,8 +62,20 @@ glm::vec3 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
         float diffuse = 0.f;
         for(DirectionalLight* l:lights){
 
-            if( l->model == PHONG ){
+            switch (l->model){
+            case PHONG:
                 fragColor += l->phong(info.hittedShape, normal, ray.direction);
+                break;
+            
+            case OREN_NAYAR:
+                fragColor += l->oren_nayar(info.hittedShape, normal, ray.direction);
+                break;
+            
+            case COOK_TORRANCE:
+                break;
+                
+            default:
+                break;
             }
 
             // diffuse += __max(0.f, glm::dot(normal, -l->direction));
