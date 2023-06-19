@@ -50,8 +50,8 @@ void RayTracingRenderer::putPixel(glm::vec2 position, glm::vec3 color){
 
 }
 
-glm::vec3 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
-
+glm::vec4 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
+    float alpha = 1.f;
     Ray ray =  this->cam.getRay(coord);
 
     glm::vec3 fragColor = glm::vec3(0.f);
@@ -71,47 +71,46 @@ glm::vec3 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
 
         glm::vec3 normal = info.hittedShape->normalAt(info.hitPosition);
 
-        if( !info.hittedShape->isRefractive() ){
+        
 
-            Ray ray2light;
-            ray2light.origin = info.hitPosition + normal*0.0001f;
+        Ray ray2light;
+        ray2light.origin = info.hitPosition + normal*0.0001f;
 
-            for(DirectionalLight* l:lights){
+        for(DirectionalLight* l:lights){
 
-                ray2light.direction = l->direction;
-                float shadowComponent = 1.f;
+            ray2light.direction = l->direction;
+            float shadowComponent = 1.f;
 
-                if( activateShadow && traceRay(ray2light).hittedShape != nullptr ){
-                    shadowComponent = 0.15f;
-                }
-
-                switch (l->model){
-                case PHONG:
-                    fragColor += shadowComponent*multiplier*l->phong(info.hittedShape, normal, ray.direction);
-                    break;
-                
-                case OREN_NAYAR:
-                    fragColor += shadowComponent*multiplier*l->oren_nayar(info.hittedShape, normal, ray.direction);
-                    break;
-                
-                case COOK_TORRANCE:
-                    fragColor += shadowComponent*multiplier*l->cook_torrance(info.hittedShape, normal, ray.direction);
-                    break;
-
-                default:
-                    break;
-                }
-                
+            if( activateShadow && traceRay(ray2light).hittedShape != nullptr ){
+                shadowComponent = 0.15f;
             }
 
-        }else{}
+            switch (l->model){
+            case PHONG:
+                fragColor += shadowComponent*multiplier*l->phong(info.hittedShape, normal, ray.direction);
+                break;
+            
+            case OREN_NAYAR:
+                fragColor += shadowComponent*multiplier*l->oren_nayar(info.hittedShape, normal, ray.direction);
+                break;
+            
+            case COOK_TORRANCE:
+                fragColor += shadowComponent*multiplier*l->cook_torrance(info.hittedShape, normal, ray.direction);
+                break;
+
+            default:
+                break;
+            }
+            
+        }
 
         multiplier *= (1.f-info.hittedShape->getRoughness()) * 0.5f;
 
-        ray.origin = info.hitPosition + normal*0.0001f;
         if( info.hittedShape->isRefractive() ){
             ray.direction = glm::refract(ray.direction, normal, info.hittedShape->getETA() );
+            ray.origin = info.hitPosition + ray.direction*0.0001f;
         }else{
+            ray.origin = info.hitPosition + normal*0.0001f;
             ray.direction = glm::reflect(ray.direction, normal);
         }
 
@@ -123,11 +122,11 @@ glm::vec3 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
         for(DirectionalLight* l:lights)
             ambient *= l->color;
         
-        return this->ambientIntensity*ambient +fragColor;
+        return glm::vec4( this->ambientIntensity*ambient +fragColor, alpha);
     }
 
     
-    return this->clearColor;
+    return glm::vec4( this->clearColor,  alpha);
     
 }
 
@@ -190,7 +189,7 @@ ImTextureID RayTracingRenderer::render(SDL_Renderer* renderer){
             screenCoord.x = (screenCoord.x*2) -1;
             screenCoord.y = (screenCoord.y*2) -1;
 
-            color = vec3ToARGB( fragmentFunction( screenCoord ));
+            color = vec4ToARGB( fragmentFunction( screenCoord ));
             pixels[y * pitch + x] = color;
         }
     }
@@ -268,6 +267,15 @@ void RayTracingRenderer::setClearColor(glm::vec3 color){
 
 uint32_t RayTracingRenderer::vec3ToARGB(const glm::vec3 &color){
     uint32_t a = 255 & 0xFF;
+    uint32_t r = static_cast<uint32_t>(__min(__max(color.r, 0.f), 1.f) * 255) & 0xFF;
+    uint32_t g = static_cast<uint32_t>(__min(__max(color.g, 0.f), 1.f) * 255) & 0xFF;
+    uint32_t b = static_cast<uint32_t>(__min(__max(color.b, 0.f), 1.f) * 255) & 0xFF;
+
+    return (a << 24) | (r << 16) | (g << 8) | b;
+}
+
+uint32_t RayTracingRenderer::vec4ToARGB(const glm::vec4 &color){
+    uint32_t a = static_cast<uint32_t>(__min(__max(color.a, 0.f), 1.f) * 255) & 0xFF;
     uint32_t r = static_cast<uint32_t>(__min(__max(color.r, 0.f), 1.f) * 255) & 0xFF;
     uint32_t g = static_cast<uint32_t>(__min(__max(color.g, 0.f), 1.f) * 255) & 0xFF;
     uint32_t b = static_cast<uint32_t>(__min(__max(color.b, 0.f), 1.f) * 255) & 0xFF;

@@ -52,7 +52,7 @@ public:
     void changeRenderResolution(size_t width, size_t height);
 
     void putPixel(glm::vec2 position, glm::vec3 color);
-    glm::vec3 fragmentFunction(glm::vec2 coord);
+    glm::vec4 fragmentFunction(glm::vec2 coord);
 
     TracingInfo traceRay(Ray r);
 
@@ -79,6 +79,7 @@ public:
     size_t* getBouncesRef(){ return &this->bounces; }
 
     static uint32_t vec3ToARGB(const glm::vec3& color);
+    static uint32_t vec4ToARGB(const glm::vec4& color);
 
 };
 
