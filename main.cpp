@@ -270,6 +270,9 @@ void drawImGUI(RayTracingRenderer* rtRenderer){
         ImGui::End();
         ImGui::Begin("Lights"); 
 
+        if(ImGui::Button("Add Light"))
+            rtRenderer->addLight(new DirectionalLight(0.f, 0.f, 0.f) );
+
         const char* light_model_names[LIGHT_MODEL_COUNT] = { "Phong", "Oren-Nayar", "Cook-Torrance" };
         
         for (size_t i = 0; i < rtRenderer->getLightsSize(); i++){
