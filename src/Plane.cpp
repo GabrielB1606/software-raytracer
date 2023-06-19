@@ -20,3 +20,15 @@ float Plane::hit(Ray r){
 glm::vec3 Plane::normalAt(glm::vec3 p){
     return this->normal;
 }
+
+glm::vec3 Plane::getPosition(){
+    return this->point;
+}
+
+void Plane::setPosition(glm::vec3 p){
+    this->point = p;
+}
+
+glm::vec3 *Plane::getNormalRef(){
+    return &this->normal;
+}

@@ -16,6 +16,11 @@ public:
     float hit(Ray r) override;
     glm::vec3 normalAt(glm::vec3 p) override;
 
+    glm::vec3 getPosition() override;
+    void setPosition(glm::vec3 p) override;
+
+    glm::vec3* getNormalRef();
+
 };
 
 #endif

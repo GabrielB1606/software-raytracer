@@ -31,7 +31,7 @@ public:
     // Should retur the normal vector at certain point
     virtual glm::vec3 normalAt(glm::vec3 p) = 0;
 
-    glm::vec3 getPosition(){ return this->position; }
+    virtual glm::vec3 getPosition(){ return this->position; }
     glm::vec3 getAlbedo(){ return this->albedo; }
     float getScale(){ return this->scale; }
     float getShininess(){ return this->shininess; }
@@ -41,7 +41,7 @@ public:
     float getFresnel(){ return this->fresnel; }
 
     void setAlbedo(glm::vec3 albedo){ this->albedo = albedo; }
-    void setPosition(glm::vec3 position){ this->position = position; }
+    virtual void setPosition(glm::vec3 position){ this->position = position; }
     void setScale(float s){ this->scale = s; }
     void setRoughness(float r){ this->roughness = r; }
     void setRefractive(bool r){ this->refractive = r; }

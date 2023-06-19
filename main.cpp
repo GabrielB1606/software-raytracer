@@ -34,14 +34,25 @@ int main(int, char**){
     // rtRenderer.addShape( new Sphere(glm::vec3(0.5f, 0.f, 0.f), 0.25f) );
     // rtRenderer.addShape( new Cube(glm::vec3(0.f, 0.f, -1.5f), 1.f) );
     rtRenderer.addShape(
-        new Plane(
-            glm::vec3(  0.f,   -0.f,  0.f),
-            glm::vec3(  0.f,    1.f,  0.f)
-        )
+        new Plane( glm::vec3( 0.f, 0.f, 0.f), glm::vec3( 0.f, -1.f, 0.f) )
+    );
+    rtRenderer.getShape(0)->setAlbedo( glm::vec3(0.25f, 0.7f, 0.25f) );
+
+    rtRenderer.addShape(
+        new Plane( glm::vec3( 0.f, 0.f, -2.5f), glm::vec3( 0.f, 0.f, 1.f) )
     );
 
-    rtRenderer.addLight( new DirectionalLight(-1.f, -1.f, -1.f) );
-    rtRenderer.addLight( new DirectionalLight(1.f, 1.f, 1.f) );
+    rtRenderer.addShape(
+        new Plane( glm::vec3( -1.f, 0.f, 0.f), glm::vec3( 1.f, 0.f, 0.f) )
+    );
+    rtRenderer.getShape(2)->setAlbedo( glm::vec3(0.25f, 0.25f, 0.7f) );
+
+    // rtRenderer.addShape(
+    //     new Sphere( glm::vec3(0.f, -0.5f, 0.f ), 0.1f )
+    // );
+
+    // rtRenderer.addLight( new DirectionalLight(-1.f, -1.f, -1.f) );
+    rtRenderer.addLight( new DirectionalLight(1.f, -2.f, 1.f) );
 
     ImTextureID textureID = nullptr;
 
