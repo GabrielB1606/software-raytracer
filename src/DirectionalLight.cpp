@@ -50,3 +50,10 @@ glm::vec3 DirectionalLight::oren_nayar(Shape *shape, glm::vec3 normal, glm::vec3
 
     return finalColor;
 }
+
+glm::vec3 DirectionalLight::cook_torrance(Shape *shape, glm::vec3 normal, glm::vec3 viewDirection){
+
+    
+
+    return glm::vec3();
+}

@@ -187,6 +187,8 @@ void drawImGUI(RayTracingRenderer* rtRenderer){
         if(ImGui::Button("Screenshot"))
             rtRenderer->takeScreenshot();
 
+        ImGui::Checkbox("Enable Shadow", &rtRenderer->activateShadow );
+
         ImGui::End();
         ImGui::Begin("Objects"); 
 

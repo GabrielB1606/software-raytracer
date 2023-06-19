@@ -27,12 +27,14 @@ private:
     std::vector<DirectionalLight*> lights;
     Camera cam;
 
-    glm::vec3 clearColor = glm::vec3(0.69f);
+    glm::vec3 clearColor = glm::vec3(0.f);
     float ambientIntensity = 0.1f;
+
 
     size_t bounces = 2;
 
 public:
+    bool activateShadow = false;
 
     struct TracingInfo{
         glm::vec3 hitPosition;

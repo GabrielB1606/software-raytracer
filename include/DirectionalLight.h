@@ -31,6 +31,7 @@ struct DirectionalLight{
 
     glm::vec3 phong( Shape* shape, glm::vec3 normal, glm::vec3 viewDirection );
     glm::vec3 oren_nayar( Shape* shape, glm::vec3 normal, glm::vec3 viewDirection );
+    glm::vec3 cook_torrance( Shape* shape, glm::vec3 normal, glm::vec3 viewDirection );
 
 };
 
