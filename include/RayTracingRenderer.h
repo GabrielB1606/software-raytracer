@@ -23,12 +23,14 @@ private:
     ImTextureID textureID;
     bool saveFrame = false;
 
+    float aspectRatio;
+
     std::vector<Shape*> scene;
     std::vector<DirectionalLight*> lights;
     Camera cam;
 
     glm::vec3 clearColor = glm::vec3(0.f);
-    float ambientIntensity = 0.1f;
+    float ambientIntensity = 0.05f;
 
 
     size_t bounces = 2;
@@ -46,6 +48,8 @@ public:
 
     RayTracingRenderer(size_t width, size_t height);
     virtual ~RayTracingRenderer();
+
+    void changeRenderResolution(size_t width, size_t height);
 
     void putPixel(glm::vec2 position, glm::vec3 color);
     glm::vec3 fragmentFunction(glm::vec2 coord);

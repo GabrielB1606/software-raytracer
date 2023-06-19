@@ -6,6 +6,8 @@ RayTracingRenderer::RayTracingRenderer(size_t width, size_t height){
     this->surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 32, SDL_PIXELFORMAT_ARGB8888);
     this->textureID = nullptr;
 
+    this->aspectRatio = width/height;
+
     this->cam.position = glm::vec3(0.f, 0.f, 1.f);
     this->cam.z_direction = -1.f;
 
@@ -23,6 +25,16 @@ RayTracingRenderer::~RayTracingRenderer(){
     
     for( DirectionalLight* l:lights )
         delete[] l;
+}
+
+void RayTracingRenderer::changeRenderResolution(size_t width, size_t height){
+
+    SDL_FreeSurface(surface);
+    this->width = width;
+    this->height = height;
+    this->aspectRatio = width/height;
+    this->surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 32, SDL_PIXELFORMAT_ARGB8888);
+
 }
 
 void RayTracingRenderer::putPixel(glm::vec2 position, glm::vec3 color){

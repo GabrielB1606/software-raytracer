@@ -18,6 +18,9 @@ SDL_Renderer* renderer;
 #define WIDTH 1280
 #define HEIGHT 720
 
+size_t current_render_width = RENDER_WIDTH;
+size_t current_render_height = RENDER_HEIGHT;
+
 // Main code
 int main(int, char**){
     
@@ -188,7 +191,12 @@ void drawImGUI(RayTracingRenderer* rtRenderer){
         glm::vec3 clearColor = rtRenderer->getClearColor();
         if(ImGui::ColorEdit3("clear color", glm::value_ptr(clearColor))) // Edit 3 floats representing a color
             rtRenderer->setClearColor(clearColor);
-        
+
+        if(ImGui::DragInt("Resolution", (int*)&current_render_height, 10)){
+            current_render_width = current_render_height;
+            rtRenderer->changeRenderResolution(current_render_width, current_render_height);
+        }
+
         if(ImGui::Button("Screenshot"))
             rtRenderer->takeScreenshot();
 
