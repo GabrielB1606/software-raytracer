@@ -35,6 +35,7 @@ private:
 
 public:
     bool activateShadow = false;
+    bool realtime = true;
 
     struct TracingInfo{
         glm::vec3 hitPosition;
@@ -52,6 +53,7 @@ public:
     TracingInfo traceRay(Ray r);
 
     ImTextureID render(SDL_Renderer* renderer);
+    ImTextureID getLastFrame();
 
     void takeScreenshot();
 

@@ -188,6 +188,10 @@ ImTextureID RayTracingRenderer::render(SDL_Renderer* renderer){
 
 }
 
+ImTextureID RayTracingRenderer::getLastFrame(){
+    return this->textureID;
+}
+
 void RayTracingRenderer::takeScreenshot(){
     this->saveFrame = true;
 }

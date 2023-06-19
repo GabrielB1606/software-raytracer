@@ -42,6 +42,8 @@ int main(int, char**){
     rtRenderer.addLight( new DirectionalLight(-1.f, -1.f, -1.f) );
     rtRenderer.addLight( new DirectionalLight(1.f, 1.f, 1.f) );
 
+    ImTextureID textureID = nullptr;
+
     // Main loop
     while (!done){
 
@@ -51,8 +53,11 @@ int main(int, char**){
 
         drawImGUI(&rtRenderer);
 
-        // Convert the SDL surface to an ImGUI texture
-        ImTextureID textureID = rtRenderer.render(renderer);
+        if( rtRenderer.realtime )
+            textureID = rtRenderer.render(renderer);
+        else
+            textureID = rtRenderer.getLastFrame();
+        
 
         // Display the image using ImGUI
         ImGui::Begin("Image Window");
@@ -188,6 +193,11 @@ void drawImGUI(RayTracingRenderer* rtRenderer){
             rtRenderer->takeScreenshot();
 
         ImGui::Checkbox("Enable Shadow", &rtRenderer->activateShadow );
+        
+        ImGui::Checkbox("Real Time Render", &rtRenderer->realtime );
+        if( !rtRenderer->realtime )
+            if(ImGui::Button("Render Frame"))
+                rtRenderer->render(renderer);
 
         ImGui::End();
         ImGui::Begin("Objects"); 
