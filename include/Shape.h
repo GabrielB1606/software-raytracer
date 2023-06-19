@@ -16,6 +16,9 @@ protected:
     float roughness = 0.f;
     float metalic;
     float shininess = 32.f;
+    float eta = 1.f;
+
+    bool refractive = false;
 
 public:
     // Should return the T parameter for the closest hit
@@ -32,11 +35,15 @@ public:
     float getScale(){ return this->scale; }
     float getShininess(){ return this->shininess; }
     float getRoughness(){ return this->roughness; }
+    bool isRefractive(){ return this->refractive; }
+    float getETA(){ return this->eta; }
 
     void setAlbedo(glm::vec3 albedo){ this->albedo = albedo; }
     void setPosition(glm::vec3 position){ this->position = position; }
     void setScale(float s){ this->scale = s; }
     void setRoughness(float r){ this->roughness = r; }
+    void setRefractive(bool r){ this->refractive = r; }
+    void setETA(float eta){ this->eta = eta; }
 
 };
 

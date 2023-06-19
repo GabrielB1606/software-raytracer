@@ -250,6 +250,14 @@ void drawImGUI(RayTracingRenderer* rtRenderer){
                     cube->setScale(s);
             }
 
+            bool refractive = selectedShape->isRefractive();
+            if(ImGui::Checkbox("Refractive", &refractive))
+                selectedShape->setRefractive(refractive);
+            
+            float eta = selectedShape->getETA();
+            if( ImGui::DragFloat("ETA", &eta, 0.01f) )
+                selectedShape->setETA(eta);
+
             if( ImGui::Button("Remove") )
                 rtRenderer->removeShape(i);
 

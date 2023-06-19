@@ -71,40 +71,48 @@ glm::vec3 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
 
         glm::vec3 normal = info.hittedShape->normalAt(info.hitPosition);
 
-        Ray ray2light;
-        ray2light.origin = info.hitPosition + normal*0.0001f;
+        if( !info.hittedShape->isRefractive() ){
 
-        for(DirectionalLight* l:lights){
+            Ray ray2light;
+            ray2light.origin = info.hitPosition + normal*0.0001f;
 
-            ray2light.direction = l->direction;
-            float shadowComponent = 1.f;
+            for(DirectionalLight* l:lights){
 
-            if( activateShadow && traceRay(ray2light).hittedShape != nullptr ){
-                shadowComponent = 0.15f;
+                ray2light.direction = l->direction;
+                float shadowComponent = 1.f;
+
+                if( activateShadow && traceRay(ray2light).hittedShape != nullptr ){
+                    shadowComponent = 0.15f;
+                }
+
+                switch (l->model){
+                case PHONG:
+                    fragColor += shadowComponent*multiplier*l->phong(info.hittedShape, normal, ray.direction);
+                    break;
+                
+                case OREN_NAYAR:
+                    fragColor += shadowComponent*multiplier*l->oren_nayar(info.hittedShape, normal, ray.direction);
+                    break;
+                
+                case COOK_TORRANCE:
+                    break;
+
+                default:
+                    break;
+                }
+                
             }
 
-            switch (l->model){
-            case PHONG:
-                fragColor += shadowComponent*multiplier*l->phong(info.hittedShape, normal, ray.direction);
-                break;
-            
-            case OREN_NAYAR:
-                fragColor += shadowComponent*multiplier*l->oren_nayar(info.hittedShape, normal, ray.direction);
-                break;
-            
-            case COOK_TORRANCE:
-                break;
-
-            default:
-                break;
-            }
-            
-        }
+        }else{}
 
         multiplier *= 0.5f;
 
         ray.origin = info.hitPosition + normal*0.0001f;
-        ray.direction = glm::reflect(ray.direction, normal);
+        if( info.hittedShape->isRefractive() ){
+            ray.direction = glm::refract(ray.direction, normal, info.hittedShape->getETA() );
+        }else{
+            ray.direction = glm::reflect(ray.direction, normal);
+        }
 
     } 
 
@@ -205,7 +213,10 @@ ImTextureID RayTracingRenderer::getLastFrame(){
 }
 
 void RayTracingRenderer::takeScreenshot(){
-    this->saveFrame = true;
+    if(realtime)
+        this->saveFrame = true;
+    else
+        SDL_SaveBMP(surface, "screenshot.bmp");
 }
 
 void RayTracingRenderer::addShape(Shape *shape){
