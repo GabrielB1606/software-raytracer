@@ -64,28 +64,29 @@ glm::vec3 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
 
         for(DirectionalLight* l:lights){
 
-            ray2light.direction = -l->direction;
+            ray2light.direction = l->direction;
+            float shadowComponent = 1.f;
 
             if( activateShadow && traceRay(ray2light).hittedShape != nullptr ){
-                fragColor *= 0.25f;
-            }else{
-                switch (l->model){
-                case PHONG:
-                    fragColor += multiplier*l->phong(info.hittedShape, normal, ray.direction);
-                    break;
-                
-                case OREN_NAYAR:
-                    fragColor += multiplier*l->oren_nayar(info.hittedShape, normal, ray.direction);
-                    break;
-                
-                case COOK_TORRANCE:
-                    break;
-
-                default:
-                    break;
-                }
+                shadowComponent = 0.15f;
             }
 
+            switch (l->model){
+            case PHONG:
+                fragColor += shadowComponent*multiplier*l->phong(info.hittedShape, normal, ray.direction);
+                break;
+            
+            case OREN_NAYAR:
+                fragColor += shadowComponent*multiplier*l->oren_nayar(info.hittedShape, normal, ray.direction);
+                break;
+            
+            case COOK_TORRANCE:
+                break;
+
+            default:
+                break;
+            }
+            
         }
 
         multiplier *= 0.5f;
@@ -94,8 +95,18 @@ glm::vec3 RayTracingRenderer::fragmentFunction(glm::vec2 coord){
         ray.direction = glm::reflect(ray.direction, normal);
 
     } 
+
+    if(everHitted){
+        glm::vec3 ambient = glm::vec3(1.f);
+        
+        for(DirectionalLight* l:lights)
+            ambient *= l->color;
+        
+        return this->ambientIntensity*ambient +fragColor;
+    }
+
     
-    return everHitted? fragColor:this->clearColor;
+    return this->clearColor;
     
 }
 

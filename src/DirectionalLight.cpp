@@ -2,7 +2,7 @@
 
 glm::vec3 DirectionalLight::phong(Shape* shape, glm::vec3 normal, glm::vec3 viewDirection){
 
-    glm::vec3 ambientComponent = ambient * color;
+    // glm::vec3 ambientComponent = ambient * color;
 
     glm::vec3 diffuseComponent = __max( 0.f, glm::dot(normal, direction) ) * color;
 
@@ -12,12 +12,12 @@ glm::vec3 DirectionalLight::phong(Shape* shape, glm::vec3 normal, glm::vec3 view
 
     glm::vec3 specularComponent = specularStrength * spec * color;
 
-    return (ambientComponent + diffuseComponent + specularComponent) * shape->getAlbedo();
+    return ( diffuseComponent + specularComponent) * shape->getAlbedo();
 }
 
 glm::vec3 DirectionalLight::oren_nayar(Shape *shape, glm::vec3 normal, glm::vec3 viewDirection){
 
-    glm::vec3 ambientComponent = ambient * color;
+    // glm::vec3 ambientComponent = ambient * color;
 
     viewDirection = -glm::normalize(viewDirection);
     glm::vec3 lightDirection = glm::normalize(direction);
@@ -46,14 +46,14 @@ glm::vec3 DirectionalLight::oren_nayar(Shape *shape, glm::vec3 normal, glm::vec3
 
     glm::vec3 diffuseComponent = color * ( glm::clamp(ndotl, 0.f, 1.f) * (A + B * std::sin(alpha) * std::tan(beta) ));
 
-    glm::vec3 finalColor = (ambientComponent + diffuseComponent) * shape->getAlbedo();
+    glm::vec3 finalColor = (diffuseComponent) * shape->getAlbedo();
 
     return finalColor;
 }
 
 glm::vec3 DirectionalLight::cook_torrance(Shape *shape, glm::vec3 normal, glm::vec3 viewDirection){
 
-    
+
 
     return glm::vec3();
 }
