@@ -36,6 +36,7 @@ public:
     void setAlbedo(glm::vec3 albedo){ this->albedo = albedo; }
     void setPosition(glm::vec3 position){ this->position = position; }
     void setScale(float s){ this->scale = s; }
+    void setRoughness(float r){ this->roughness = r; }
 
 };
 

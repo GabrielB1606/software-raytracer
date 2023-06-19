@@ -205,6 +205,11 @@ void drawImGUI(RayTracingRenderer* rtRenderer){
             ImGui::PushID(i);
 
             Shape* selectedShape = rtRenderer->getShape(i);
+
+            float roughness = selectedShape->getRoughness();
+            if( ImGui::DragFloat("Roughness", &roughness, 0.05f, 0.f, 1.f) )
+                selectedShape->setRoughness(roughness);
+
             glm::vec3 shapeColor = selectedShape->getAlbedo();
             if(ImGui::ColorEdit3("Albedo", glm::value_ptr(shapeColor) )) // Edit 3 floats representing a color
                 selectedShape->setAlbedo(shapeColor);

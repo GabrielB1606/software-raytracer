@@ -21,17 +21,20 @@ glm::vec3 DirectionalLight::oren_nayar(Shape *shape, glm::vec3 normal, glm::vec3
 
     // https://garykeen27.wixsite.com/portfolio/oren-nayar-shading
 
+    viewDirection = -glm::normalize(viewDirection);
+    glm::vec3 lightDirection = glm::normalize(direction);
+
     float ndotv = std::clamp(glm::dot(normal, viewDirection), 0.f, 1.f);
     float angleVN = std::acos(ndotv); // theta_r
 
-    float ndotl = std::clamp(glm::dot(normal, direction), 0.f, 1.f);
+    float ndotl = std::clamp(glm::dot(normal, lightDirection), 0.f, 1.f);
     float angleLN = std::acos(ndotl); // theta_i
 
     float cos_phi_diff =
         glm::clamp(
             glm::dot(
                 glm::normalize( viewDirection - normal * ndotv ),
-                glm::normalize(direction-normal *ndotl)
+                glm::normalize(lightDirection-normal *ndotl)
             )
         , 0.f, 1.f );
 
